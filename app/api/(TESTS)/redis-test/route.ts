@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
 	try {
-		await redis.connect();
 		const pong = await redis.ping();
 		await redis.set("redis:test", "ok", "EX", 10);
 
