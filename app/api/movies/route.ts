@@ -42,13 +42,11 @@
 
 // https://developer.themoviedb.org/reference/discover-movie
 
-export async function GET() {
+import { NextRequest } from "next/server";
+
+export async function GET(req: NextRequest) {
 	try {
 		const url = new URL(process.env.TMDB_BASE_URL + "/discover/movie");
-		const params = new URLSearchParams({
-			sort_by: "popularity.desc",
-		}).toString();
-
 		const options = {
 			method: "GET",
 			headers: {
@@ -57,7 +55,10 @@ export async function GET() {
 			},
 		};
 
-		const TMDBResponse = await fetch(url + "?" + params, options)
+		const TMDBResponse = await fetch(
+			url + "?" + req.nextUrl.searchParams.toString(),
+			options
+		)
 			.then((res) => res.json())
 			.catch((err) => console.error(err));
 
