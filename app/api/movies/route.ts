@@ -40,6 +40,8 @@
  * @property {string} error - Error message.
  */
 
+// https://developer.themoviedb.org/reference/discover-movie
+
 export async function GET() {
 	try {
 		const url = new URL(process.env.TMDB_BASE_URL + "/discover/movie");
