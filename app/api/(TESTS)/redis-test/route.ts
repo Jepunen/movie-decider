@@ -1,24 +1,18 @@
 import redis from "@/redis/redis";
-import { NextResponse } from "next/server";
 
 export async function GET() {
 	try {
 		const pong = await redis.ping();
 		await redis.set("redis:test", "ok", "EX", 10);
 
-		return NextResponse.json({
-			status: "ok",
-			ping: pong,
+		return Response.json({
+			status: 200,
+			message: `${pong}`,
 		});
 	} catch (err) {
-		return NextResponse.json(
-			{
-				status: "error",
-				error: err instanceof Error ? err.message : "Unknown error",
-			},
-			{
-				status: 500,
-			}
-		);
+		return Response.json({
+			status: 500,
+			message: err instanceof Error ? err.message : "Unknown error",
+		});
 	}
 }
