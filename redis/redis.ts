@@ -1,17 +1,16 @@
 import Redis from "ioredis";
 
 declare global {
-	var redis: Redis | undefined;
+	var _redis: Redis | undefined;
 }
 
-const redis: Redis =
-	globalThis.redis ??
-	new Redis({
-		host: process.env.REDIS_HOST,
-		port: Number(process.env.REDIS_PORT),
-	});
-
-if (!globalThis.redis) {
-	globalThis.redis = redis;
+export function getRedis(): Redis {
+	if (!globalThis._redis) {
+		globalThis._redis = new Redis({
+			host: process.env.REDIS_HOST,
+			port: Number(process.env.REDIS_PORT),
+			lazyConnect: true,
+		});
+	}
+	return globalThis._redis;
 }
-export default redis;
