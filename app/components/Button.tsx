@@ -12,7 +12,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
         <button
             ref={ref}
             type={type}
-            className="bg-accent text-primary rounded-2xl p-2.5 w-full"
+            className="bg-accent text-primary rounded-2xl p-2.5 w-full font-extrabold text-base"
             disabled={disabled || isLoading}
             aria-busy={isLoading || undefined}
             {...props}
