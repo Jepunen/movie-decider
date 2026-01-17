@@ -5,6 +5,13 @@
   --foreground: #171717;
 }
 
+@theme {
+  --color-primary: #222831;
+  --color-secondary: #393E46;
+  --color-accent: #FFD369;
+  --color-text: #EEEEEE;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
