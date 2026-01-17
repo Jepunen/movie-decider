@@ -27,7 +27,7 @@ const RoomCode: React.FC<RoomCodeProps> = ({ isHost, code, onCodeChange }) => {
             {isHost ? (
                 <button
                     onClick={handleCopyToClipboard}
-                    className="px-2 py-1 bg-accent text-primary text-4xl font-black border-solid border-2 border-secondary rounded-md  text-center w-40 tracking-widest hover:bg-accent/80"
+                    className="px-2 py-1 bg-accent text-primary text-4xl font-black border-solid border-2 border-secondary rounded-md  text-center w-40 tracking-widest transition-all duration-200 active:scale-95"
                 >
                     {copied ? "Copied" : code}
                 </button>
