@@ -6,6 +6,7 @@ import Button from "./Button";
 import Header from "./Header";
 import Reviews from "./Reviews";
 import RoomCode from "./RoomCode";
+import StatusImage from "@/app/components/StatusImage";
 
 const ComponentsPage = () => {
     const [guestCode, setGuestCode] = useState("");
@@ -22,6 +23,11 @@ const ComponentsPage = () => {
                 <Reviews IMDBRating="8.5/10" RottenTomatoesRating="95%" MetacriticRating="88" />
                 <RoomCode isHost={true} code="123456" />
                 <RoomCode isHost={false} code={guestCode} onCodeChange={(code) => setGuestCode(code)} />
+                <StatusImage status={'default'} />
+                <StatusImage status={'hosting'} />
+                <StatusImage status={'waiting'} />
+                <StatusImage status={'joining'} />
+                <StatusImage status={'setting'} />
             </div>
         </div>
     );
