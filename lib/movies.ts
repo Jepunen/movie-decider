@@ -25,3 +25,20 @@ export async function getMovies(params: DiscoverMovieParams = {}) {
 		.then((res) => res.json())
 		.catch((err) => console.error(err));
 }
+
+// https://api.themoviedb.org/3/movie/{movie_id}
+export async function getMovieDetails(movieId: number) {
+	const url = new URL(process.env.TMDB_BASE_URL + "/movie/" + movieId);
+	const options = {
+		method: "GET",
+		headers: {
+			accept: "application/json",
+			Authorization: "Bearer " + process.env.TMDB_API_KEY,
+		},
+		next: { revalidate: 3600 }, // Cache for 1 hour
+	};
+
+	return await fetch(url, options)
+		.then((res) => res.json())
+		.catch((err) => console.error(err));
+}
