@@ -26,6 +26,7 @@ const sampleMovie: Movie = {
   vote_count: 10000,
 };
 
+// SAMPLE RATINGS for testing MovieForRating component - R.M.
 const sampleIMDBRating = "8.5/10";
 const sampleRottenTomatoesRating = "92%";
 const sampleMetacriticRating = "85/100";
@@ -65,14 +66,6 @@ export default function Home() {
   }, [])
 
   return (
-    <div className="bg-primary">
-            <h2 className="text-accent text-center">Components Page</h2>
-            <div className="flex flex-col items-center gap-4 m-4">
-                <Header />
-                <MovieForRating movie={sampleMovie} RottenTomatoesRating={sampleRottenTomatoesRating} IMDBRating={sampleIMDBRating} MetacriticRating={sampleMetacriticRating} />
-            </div>
-        </div>
-    /*
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-primary">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-primary sm:items-start">
         <Image
@@ -132,6 +125,5 @@ export default function Home() {
         </div>
       </main>
     </div>
-    */
   );
 }
