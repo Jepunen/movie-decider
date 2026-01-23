@@ -1,10 +1,10 @@
 import { getMovies } from "@/lib/movies";
-import { getOMDBRatings } from "@/lib/ratings";
+import { getOMDBDetails } from "@/lib/ratings";
 import { Movie, OMBDMovie } from "@/types/movies";
 
 export default async function test() {
 	const movies = await getMovies();
-	const rating: OMBDMovie = await getOMDBRatings(movies.results[5].id);
+	const rating: OMBDMovie = await getOMDBDetails(movies.results[5].id);
 	return (
 		<div className="flex flex-col">
 			<div className="flex justify-around gap-1 h-full flex-wrap">

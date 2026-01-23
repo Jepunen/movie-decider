@@ -1,7 +1,7 @@
 import { getMovieDetails } from "./movies";
 
 // https://www.omdbapi.com/
-export async function getOMDBRatings(tmdb_id: number) {
+export async function getOMDBDetails(tmdb_id: number) {
 	const movieDetails = await getMovieDetails(tmdb_id);
 	const url = new URL(
 		`https://www.omdbapi.com/?i=${movieDetails.imdb_id}&apikey=` +
