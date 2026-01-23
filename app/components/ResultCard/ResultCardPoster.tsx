@@ -8,7 +8,7 @@ interface ResultCardPosterProps {
 
 export const ResultCardPoster: React.FC<ResultCardPosterProps> = ({ posterPath, title }) => {
   return (
-    <div className="relative w-28 h-44 shrink-0">
+    <div className="relative w-28 h-44">
       <Image
         src={posterPath ?? "/movie_posters_DEV/the_martian.jpg"}
         alt={title ?? "Movie Poster"}

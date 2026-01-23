@@ -23,14 +23,17 @@ export const ResultCardDetails: React.FC<ResultDetailsProps> = ({
 
   return (
     <div className="flex flex-col justify-center h-full space-y-1">
-      <h2 className="font-bold text-2xl">{movie.title}</h2>
-      <p className="text-xl">{releaseYear}</p>
-      <p className="text-lg">{genres}</p>
+      <h2 className="font-bold text-xl">{movie.title}</h2>
+      <div className="flex flex-row gap-3">
+        <p className="text-lg">{releaseYear}</p>
+        <p className="text-lg">197min</p> {/* Placeholder for runtime */}
+      </div>
+      <p className="text-md">{genres}</p>
       <ResultCardReviews
         IMDBRating={IMDBRating}
         RottenTomatoesRating={RottenTomatoesRating}
         MetacriticRating={MetacriticRating}
-        />
+      />
     </div>
   );
 };

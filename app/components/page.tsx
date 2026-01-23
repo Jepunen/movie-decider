@@ -34,9 +34,9 @@ const sampleMovie: Movie = {
 };
 
 // SAMPLE RATINGS for testing MovieForRating component - R.M.
-const sampleIMDBRating = "8.5/10";
+const sampleIMDBRating = "8.5";
 const sampleRottenTomatoesRating = "92%";
-const sampleMetacriticRating = "85/100";
+const sampleMetacriticRating = "85";
 
 const ComponentsPage = () => {
   const [guestCode, setGuestCode] = useState("");
