@@ -7,7 +7,7 @@ import Header from "./Header";
 import Reviews from "./Reviews";
 import RoomCode from "./RoomCode";
 import StatusImage from "@/app/components/StatusImage";
-import MovieForRating from "./MovieCard";
+import RateButton from "./RateButton";
 import type { Movie } from "../../types/movies";
 import MovieCard from "./MovieCard";
 
@@ -54,6 +54,13 @@ const ComponentsPage = () => {
                 <StatusImage status={'waiting'} />
                 <StatusImage status={'joining'} />
                 <StatusImage status={'setting'} />
+                <div className="flex flex-row gap-3">
+                    <RateButton rate="worst" />
+                    <RateButton rate="bad" />
+                    <RateButton rate="normal" />
+                    <RateButton rate="good" />
+                    <RateButton rate="best" />
+                </div>
                 <MovieCard movie={sampleMovie} IMDBRating={sampleIMDBRating} RottenTomatoesRating={sampleRottenTomatoesRating} MetacriticRating={sampleMetacriticRating} />
             </div>
         </div>
