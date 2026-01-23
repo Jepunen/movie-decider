@@ -8,7 +8,7 @@ import { ResultCardPoster } from "./ResultCard/ResultCardPoster";
 import { ResultCardModal } from "./ResultCard/ResultCardModal";
 import Button from "./Button";
 
-export interface ReviewCardProps {
+export interface ResultCardProps {
   movie: Movie;
   IMDBRating?: string;
   RottenTomatoesRating?: string;
@@ -16,7 +16,7 @@ export interface ReviewCardProps {
   compatibilityScore?: number;
 }
 
-const ReviewCard: React.FC<ReviewCardProps> = ({
+const ResultCard: React.FC<ResultCardProps> = ({
   movie,
   IMDBRating,
   RottenTomatoesRating,
@@ -53,4 +53,4 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   );
 };
 
-export default ReviewCard;
+export default ResultCard;
