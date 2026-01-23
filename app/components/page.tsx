@@ -7,6 +7,7 @@ import Header from "./Header";
 import Reviews from "./Reviews";
 import RoomCode from "./RoomCode";
 import StatusImage from "@/app/components/StatusImage";
+import PillButtonGroup from "./PillButtonGroup";
 import RateButton from "./RateButton";
 import type { Movie } from "../../types/movies";
 import MovieCard from "./MovieCard";
@@ -36,6 +37,7 @@ const sampleMetacriticRating = "85/100";
 
 const ComponentsPage = () => {
     const [guestCode, setGuestCode] = useState("");
+    const [selected, setSelected] = useState('action');
 
     return (
         <div className="bg-primary">
@@ -54,6 +56,15 @@ const ComponentsPage = () => {
                 <StatusImage status={'waiting'} />
                 <StatusImage status={'joining'} />
                 <StatusImage status={'setting'} />
+                <PillButtonGroup
+                    options={[
+                        { label: 'Action', value: 'action' },
+                        { label: 'Comedy', value: 'comedy' },
+                        { label: 'Drama', value: 'drama' },
+                    ]}
+                    value={selected}
+                    onChange={setSelected}
+                />
                 <div className="flex flex-row gap-3">
                     <RateButton rate="worst" />
                     <RateButton rate="bad" />
