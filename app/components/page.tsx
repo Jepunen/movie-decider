@@ -7,8 +7,9 @@ import Header from "./Header";
 import Reviews from "./Reviews";
 import RoomCode from "./RoomCode";
 import StatusImage from "@/app/components/StatusImage";
-import MovieForRating from "./MovieForRating";
+import MovieForRating from "./MovieCard";
 import type { Movie } from "../../types/movies";
+import MovieCard from "./MovieCard";
 
 // SAMPLE MOVIE DATA for testing MovieForRating component - R.M.
 const sampleMovie: Movie = {
@@ -53,7 +54,7 @@ const ComponentsPage = () => {
                 <StatusImage status={'waiting'} />
                 <StatusImage status={'joining'} />
                 <StatusImage status={'setting'} />
-                <MovieForRating movie={sampleMovie} IMDBRating={sampleIMDBRating} RottenTomatoesRating={sampleRottenTomatoesRating} MetacriticRating={sampleMetacriticRating} />
+                <MovieCard movie={sampleMovie} IMDBRating={sampleIMDBRating} RottenTomatoesRating={sampleRottenTomatoesRating} MetacriticRating={sampleMetacriticRating} />
             </div>
         </div>
     );
