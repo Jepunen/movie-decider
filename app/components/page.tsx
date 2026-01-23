@@ -7,9 +7,11 @@ import Header from "./Header";
 import Reviews from "./Reviews";
 import RoomCode from "./RoomCode";
 import StatusImage from "@/app/components/StatusImage";
+import PillButtonGroup from "./PillButtonGroup";
 
 const ComponentsPage = () => {
     const [guestCode, setGuestCode] = useState("");
+    const [selected, setSelected] = useState('action');
 
     return (
         <div className="bg-primary">
@@ -28,6 +30,15 @@ const ComponentsPage = () => {
                 <StatusImage status={'waiting'} />
                 <StatusImage status={'joining'} />
                 <StatusImage status={'setting'} />
+                <PillButtonGroup
+                    options={[
+                        { label: 'Action', value: 'action' },
+                        { label: 'Comedy', value: 'comedy' },
+                        { label: 'Drama', value: 'drama' },
+                    ]}
+                    value={selected}
+                    onChange={setSelected}
+                />
             </div>
         </div>
     );
