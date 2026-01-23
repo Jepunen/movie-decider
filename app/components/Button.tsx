@@ -5,7 +5,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-    {isLoading = false, children, disabled, type = 'button', ...props},
+    {isLoading = false, children, disabled, type = 'button', ...rest},
     ref
 ){
     return (
@@ -15,7 +15,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
             className="bg-accent text-primary rounded-2xl p-2.5 w-full"
             disabled={disabled || isLoading}
             aria-busy={isLoading || undefined}
-            {...props}
+            {...rest}
         >
             {isLoading ? 'Loading...' : children}
         </button>
