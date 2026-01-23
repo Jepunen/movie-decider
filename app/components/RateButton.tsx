@@ -24,9 +24,12 @@ export default function RateButton({ rate, ...rest }: RateButtonProps) {
     const colorClass = colors[rate] ?? colors.normal;
 
     return (
-        <button {...rest}>
+        <button
+            {...rest}
+            className={`transition-transform duration-150 ease-out active:scale-95  ${rest.className ?? ''}`}
+            >
             <div className={`w-12 h-12 rounded-full flex items-center justify-center ${colorClass}`}>
-                <span className="text-4xl leading-none -mb-0.5">{emojis[rate]}</span>
+                <span className="text-4xl leading-none">{emojis[rate]}</span>
             </div>
         </button>
     );
