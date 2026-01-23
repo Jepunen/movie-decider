@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { socket } from "./socket";
-import { disconnect } from "process";
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
