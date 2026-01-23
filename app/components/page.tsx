@@ -7,6 +7,7 @@ import Header from "./Header";
 import Reviews from "./Reviews";
 import RoomCode from "./RoomCode";
 import StatusImage from "@/app/components/StatusImage";
+import RateButton from "./RateButton";
 
 const ComponentsPage = () => {
     const [guestCode, setGuestCode] = useState("");
@@ -28,6 +29,13 @@ const ComponentsPage = () => {
                 <StatusImage status={'waiting'} />
                 <StatusImage status={'joining'} />
                 <StatusImage status={'setting'} />
+                <div className="flex flex-row gap-3">
+                    <RateButton rate="worst" />
+                    <RateButton rate="bad" />
+                    <RateButton rate="normal" />
+                    <RateButton rate="good" />
+                    <RateButton rate="best" />
+                </div>
             </div>
         </div>
     );
