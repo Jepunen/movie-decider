@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface RateButtonProps {
+export interface RateButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     rate: 'worst' | 'bad' | 'normal' | 'good' | 'best';
 }
 
@@ -20,11 +20,11 @@ const emojis: Record<RateButtonProps['rate'], string> = {
     best: '🤩'
 };
 
-export default function RateButton({ rate }: RateButtonProps) {
+export default function RateButton({ rate, ...rest }: RateButtonProps) {
     const colorClass = colors[rate] ?? colors.normal;
 
     return (
-        <button>
+        <button {...rest}>
             <div className={`w-12 h-12 rounded-full flex items-center justify-center ${colorClass}`}>
                 <span className="text-4xl leading-none -mb-0.5">{emojis[rate]}</span>
             </div>
