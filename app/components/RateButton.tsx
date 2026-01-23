@@ -26,7 +26,7 @@ export default function RateButton({ rate }: RateButtonProps) {
     return (
         <button>
             <div className={`w-12 h-12 rounded-full flex items-center justify-center ${colorClass}`}>
-                <span className="text-2xl">{emojis[rate]}</span>
+                <span className="text-4xl leading-none -mb-0.5">{emojis[rate]}</span>
             </div>
         </button>
     );
