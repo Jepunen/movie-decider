@@ -30,7 +30,7 @@ const ResultCard: React.FC<ResultCardProps> = ({
       <div className="flex items-center justify-center h-full pl-2 pr-2">
         <ResultCardPoster posterPath={movie.poster_path} title={movie.title} />
       </div>
-      <div className="flex flex-col justify-between flex p-0.5">
+      <div className="flex flex-col justify-between p-0.5">
         <ResultCardDetails
           movie={movie}
           IMDBRating={IMDBRating}
@@ -38,7 +38,7 @@ const ResultCard: React.FC<ResultCardProps> = ({
           MetacriticRating={MetacriticRating}
         />
       </div>
-      <div className="flex flex-col items-center justify-between h-42 w-22 pt-6 pr-3 pl-1">
+      <div className="flex flex-col items-center justify-between h-44 w-24 pt-6 pr-3 pl-1">
         <ResultCardCompatibility compatibilityScore={compatibilityScore} />
         <div>
           <Button onClick={() => setIsModalOpen(true)}>Info</Button>

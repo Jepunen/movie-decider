@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-export interface ReviewsProps {
+export interface ResultCardReviewsProps {
   IMDBRating?: string;
   RottenTomatoesRating?: string;
   MetacriticRating?: string;
@@ -20,7 +20,7 @@ const RatingItem: React.FC<RatingItemProps> = ({ src, alt, rating }) => (
   </div>
 );
 
-const ResultCardReviews: React.FC<ReviewsProps> = ({
+const ResultCardReviews: React.FC<ResultCardReviewsProps> = ({
   IMDBRating,
   RottenTomatoesRating,
   MetacriticRating,
