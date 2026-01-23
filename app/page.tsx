@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { socket } from "./socket";
-import ComponentsPage from "./components/page";
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -40,8 +39,6 @@ export default function Home() {
   }, [])
 
   return (
-    <ComponentsPage/>
-    /*
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-primary">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-primary sm:items-start">
         <Image
@@ -101,6 +98,5 @@ export default function Home() {
         </div>
       </main>
     </div>
-    */
   );
 }
