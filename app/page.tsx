@@ -3,42 +3,44 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { socket } from "./socket";
+import ComponentsPage from "./components/page";
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [transport, setTransport] = useState<string>("N/A");
 
-
-// hande weboscket connection via socket.io
+  // hande weboscket connection via socket.io
   useEffect(() => {
     if (socket.connected) {
       onConnect();
     }
-  
+
     function onConnect() {
       setIsConnected(true);
       setTransport(socket.io.engine.transport.name);
 
-      socket.io.engine.on("upgrade", (transport => {
-        setTransport(transport.name)
-      }))
+      socket.io.engine.on("upgrade", (transport) => {
+        setTransport(transport.name);
+      });
     }
 
     function onDisconnect() {
-      setIsConnected(false)
-      setTransport("N/A")
+      setIsConnected(false);
+      setTransport("N/A");
     }
 
-    socket.on("connect", onConnect)
-    socket.on("disconnect", onDisconnect)
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
 
     return () => {
-      socket.off("connect", onConnect)
-      socket.off("disconnect", onDisconnect)
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
     };
-  }, [])
+  }, []);
 
   return (
+    <ComponentsPage />
+    /*
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-primary">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-primary sm:items-start">
         <Image
@@ -98,5 +100,6 @@ export default function Home() {
         </div>
       </main>
     </div>
+    */
   );
 }

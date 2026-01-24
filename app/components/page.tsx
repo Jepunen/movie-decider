@@ -34,6 +34,24 @@ const sampleMovie: Movie = {
   vote_count: 10000,
 };
 
+{
+    title: string;
+    description: string,
+    poster_url: string,
+    release_date: string,
+    runtime: string,
+    genres: string,
+    imdb_id: string,
+    imdb_url: string,
+    ratings: Array<{
+        Source: string;
+        Value: string;
+    }>,
+    language: string,
+    director: string,
+    actors: string,
+}
+
 // SAMPLE RATINGS for testing MovieForRating component - R.M.
 const sampleIMDBRating = "8.5";
 const sampleRottenTomatoesRating = "92%";
