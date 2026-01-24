@@ -12,6 +12,7 @@ import RateButton from "./RateButton";
 import type { Movie } from "../../types/movies";
 import MovieCard from "./MovieCard";
 import ResultCard from "./ResultCard";
+import GenreSelector from "./GenreSelector";
 
 // SAMPLE MOVIE DATA for testing MovieForRating component - R.M.
 const sampleMovie: Movie = {
@@ -47,6 +48,7 @@ const ComponentsPage = () => {
       <h2 className="text-accent text-center">Components Page</h2>
       <div className="flex flex-col items-center gap-4 m-4">
         <Header />
+        <GenreSelector />
         <ResultCard
           movie={sampleMovie}
           IMDBRating={sampleIMDBRating}
