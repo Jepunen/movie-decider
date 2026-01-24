@@ -1,43 +1,41 @@
 import { getMovies } from "@/lib/movies";
-import { getOMDBDetails } from "@/lib/ratings";
-import { Movie, OMBDMovie } from "@/types/movies";
+import { CustomMovie } from "@/types/movies";
 
 export default async function test() {
 	const movies = await getMovies();
-	const rating: OMBDMovie = await getOMDBDetails(movies.results[5].id);
 	return (
 		<div className="flex flex-col">
 			<div className="flex justify-around gap-1 h-full flex-wrap">
-				{movies.results.map((movie: Movie) => {
+				{movies.map((movie: CustomMovie) => {
 					return (
-						<p key={movie.id}>
+						<div key={movie.imdb_id}>
 							{movie.title}
 							<br />
-							{" ID: "}
-							{movie.id}
+							{"ID: "}
+							{movie.imdb_id}
 							<br />
-							{"Rating: " + Number(movie.vote_average.toFixed(1))}
-							<br />
+							{movie.ratings.length === 0 && (
+								<p>No ratings found.</p>
+							)}
+							{movie.ratings.map((rating) => {
+								return (
+									<p key={rating.Source}>
+										{rating.Source}: {rating.Value}
+									</p>
+								);
+							})}
 							{"Released: " + movie.release_date}
 							<img
 								src={
-									movie.poster_path
-										? `https://image.tmdb.org/t/p/w200${movie.poster_path}`
+									movie.poster_url
+										? movie.poster_url
 										: "/placeholder.png"
 								}
 								alt={movie.title}
 							/>
-						</p>
+						</div>
 					);
 				})}
-			</div>
-			<div className="pt-36 mx-auto pb-36">
-				{rating.Title} ({rating.Year})
-				{rating.Ratings.map((source: OMBDMovie["Ratings"][number]) => (
-					<p key={source.Source}>
-						{source.Source}: {source.Value}
-					</p>
-				))}
 			</div>
 		</div>
 	);

@@ -102,7 +102,7 @@ export type Movie = {
 	vote_count: number;
 };
 
-export type OMBDMovie = {
+export type OMDBMovie = {
 	Title: string;
 	Year: string;
 	Rated: string;
@@ -131,4 +131,22 @@ export type OMBDMovie = {
 	Production: string;
 	Website: string;
 	Response: string;
+};
+
+export type CustomMovie = {
+	title: string;
+	description: string,
+	poster_url: string,
+	release_date: string,
+	runtime: string,
+	genres: string,
+	imdb_id: string,
+	imdb_url: string,
+	ratings: Array<{
+		Source: string;
+		Value: string;
+	}>,
+	language: string,
+	director: string,
+	actors: string,
 };
