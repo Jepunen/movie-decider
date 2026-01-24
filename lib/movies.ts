@@ -1,4 +1,11 @@
-import { DiscoverMovieParams } from "@/types/movies";
+import {
+	DiscoverMovieParams,
+	Movie,
+	OMDBMovie,
+	CustomMovie,
+} from "@/types/movies";
+
+const CACHE_LENGTH = 86400; // 24 hours
 
 // https://developer.themoviedb.org/reference/discover-movie
 export async function getMovies(params: DiscoverMovieParams = {}) {
@@ -9,7 +16,7 @@ export async function getMovies(params: DiscoverMovieParams = {}) {
 			accept: "application/json",
 			Authorization: "Bearer " + process.env.TMDB_API_KEY,
 		},
-		next: { revalidate: 3600 }, // Cache for 1 hour
+		next: { revalidate: CACHE_LENGTH }, // Cache for 24 hours
 	};
 
 	let queryString = new URLSearchParams();
@@ -21,9 +28,38 @@ export async function getMovies(params: DiscoverMovieParams = {}) {
 		}
 	});
 
-	return await fetch(url + "?" + queryString.toString(), options)
+	const tmdbDiscoveryMovies = await fetch(
+		url + "?" + queryString.toString(),
+		options,
+	)
 		.then((res) => res.json())
 		.catch((err) => console.error(err));
+
+	//console.log(tmdbDiscoveryMovies);
+
+	let outputMovies: CustomMovie[] = await Promise.all(
+		tmdbDiscoveryMovies.results.map(async (movie: Movie) => {
+			const omdbDetails: OMDBMovie = await getOMDBetails(movie.id);
+
+			return {
+				title: movie.title,
+				description: movie.overview,
+				poster_url:
+					"https://image.tmdb.org/t/p/w200" + movie.poster_path,
+				release_date: movie.release_date,
+				runtime: omdbDetails.Runtime,
+				genres: omdbDetails.Genre,
+				imdb_id: omdbDetails.imdbID,
+				imdb_url: `https://www.imdb.com/title/${omdbDetails.imdbID}/`,
+				ratings: omdbDetails.Ratings,
+				language: movie.original_language,
+				director: omdbDetails.Director,
+				actors: omdbDetails.Actors,
+			};
+		}),
+	);
+
+	return outputMovies;
 }
 
 // https://api.themoviedb.org/3/movie/{movie_id}
@@ -35,10 +71,40 @@ export async function getMovieDetails(movieId: number) {
 			accept: "application/json",
 			Authorization: "Bearer " + process.env.TMDB_API_KEY,
 		},
-		next: { revalidate: 3600 }, // Cache for 1 hour
+		next: { revalidate: CACHE_LENGTH }, // Cache for 24 hours
 	};
 
-	return await fetch(url, options)
-		.then((res) => res.json())
-		.catch((err) => console.error(err));
+	const res = await fetch(url, options);
+
+	if (!res.ok) {
+		throw new Error("Failed to fetch movie details");
+	}
+
+	return await res.json();
+}
+
+// https://www.omdbapi.com/
+export async function getOMDBetails(tmdb_id: number) {
+	const movieDetails = await getMovieDetails(tmdb_id);
+	//console.log(movieDetails);
+	const url = new URL(
+		`https://www.omdbapi.com/?i=${movieDetails.imdb_id}&apikey=` +
+			process.env.OMDB_API_KEY,
+	);
+	const options = {
+		method: "GET",
+		headers: {
+			accept: "application/json",
+			Authorization: "Bearer " + process.env.TMDB_API_KEY,
+		},
+		next: { revalidate: CACHE_LENGTH }, // Cache for 24 hours
+	};
+
+	const res = await fetch(url, options);
+
+	if (!res.ok) {
+		throw new Error("Failed to fetch OMDB details");
+	}
+
+	return await res.json();
 }
