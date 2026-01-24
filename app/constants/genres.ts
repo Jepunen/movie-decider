@@ -17,8 +17,8 @@ export const genres = [
   { id: 10770, name: "TV Movie" },
   { id: 53, name: "Thriller" },
   { id: 10752, name: "War" },
-  { id: 37, name: "Western" }
+  { id: 37, name: "Western" },
 ];
 
 // Optional: for quick lookup by id
-export const genreMap = Object.fromEntries(genres.map(g => [g.id, g.name]));
+export const genreMap = Object.fromEntries(genres.map((g) => [g.id, g.name]));

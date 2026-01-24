@@ -1,7 +1,6 @@
-
-import React, { useState } from 'react';
-import GenreButton from './GenreSelector/GenreButton';
-import { genres } from '../constants/genres';
+import React, { useState } from "react";
+import GenreButton from "./GenreSelector/GenreButton";
+import { genres } from "../constants/genres";
 
 type GenreSelectorProps = {
   onChange?: (selected: number[]) => void;
@@ -19,7 +18,7 @@ export default function GenreSelector({ onChange }: GenreSelectorProps) {
 
   const toggleGenre = (id: number) => {
     const updated = selected.includes(id)
-      ? selected.filter(g => g !== id)
+      ? selected.filter((g) => g !== id)
       : [...selected, id];
     setSelected(updated);
     if (onChange) {
@@ -28,9 +27,9 @@ export default function GenreSelector({ onChange }: GenreSelectorProps) {
   };
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-      {genres.map(genre => (
-        <GenreButton 
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+      {genres.map((genre) => (
+        <GenreButton
           key={genre.id}
           selected={selected.includes(genre.id)}
           onClick={() => toggleGenre(genre.id)}
