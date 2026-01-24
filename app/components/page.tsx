@@ -48,7 +48,7 @@ const ComponentsPage = () => {
       <h2 className="text-accent text-center">Components Page</h2>
       <div className="flex flex-col items-center gap-4 m-4">
         <Header />
-        <GenreSelector></GenreSelector>
+        <GenreSelector />
         <ResultCard
           movie={sampleMovie}
           IMDBRating={sampleIMDBRating}
