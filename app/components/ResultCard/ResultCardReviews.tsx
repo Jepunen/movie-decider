@@ -13,6 +13,7 @@ interface RatingItemProps {
   rating: string;
 }
 
+{/* TODO: in the future the reviews and rating items could be combined to serve both purposes */}
 const RatingItem: React.FC<RatingItemProps> = ({ src, alt, rating }) => (
   <div className="flex flex-row items-center gap-0.5">
     <Image src={src} alt={alt} width={18} height={18} />
