@@ -48,7 +48,7 @@ export async function getMovies(params: DiscoverMovieParams = {}) {
 					"https://image.tmdb.org/t/p/w200" + movie.poster_path,
 				release_date: movie.release_date,
 				runtime: omdbDetails.Runtime,
-				genres: omdbDetails.Genre,
+				genres: movie.genre_ids,
 				imdb_id: omdbDetails.imdbID,
 				imdb_url: `https://www.imdb.com/title/${omdbDetails.imdbID}/`,
 				ratings: omdbDetails.Ratings,
@@ -58,6 +58,8 @@ export async function getMovies(params: DiscoverMovieParams = {}) {
 			};
 		}),
 	);
+
+	// console.log(outputMovies);
 
 	return outputMovies;
 }
