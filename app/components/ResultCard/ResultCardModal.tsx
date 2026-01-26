@@ -55,12 +55,18 @@ export const ResultCardModal: React.FC<ResultCardModalProps> = ({
                 <p className="text-lg text-text">{movie.description}</p>
                 {/* Add more movie details here as needed */}
                 <div className="mt-4 text-sm text-text">
-                  <div><strong>Release date:</strong> {movie.release_date}</div>
-                  <div><strong>Runtime</strong> {movie.runtime} minutes</div>
-                  <div><strong>Director</strong> {movie.director}</div>
-                  <div><strong>Actors:</strong> {movie.actors}</div>
-
-
+                  <div>
+                    <strong>Release date:</strong> {movie.release_date}
+                  </div>
+                  <div>
+                    <strong>Runtime</strong> {movie.runtime} minutes
+                  </div>
+                  <div>
+                    <strong>Director</strong> {movie.director}
+                  </div>
+                  <div>
+                    <strong>Actors:</strong> {movie.actors}
+                  </div>
                 </div>
               </div>
               <div className="mt-4">
