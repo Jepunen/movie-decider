@@ -46,7 +46,7 @@ const ComponentsPage = () => {
   return (
     <div className="bg-primary min-h-screen">
       <h2 className="text-accent text-center pt-4">Components Page</h2>
-      <div className="flex flex-col items-center gap-4 m-4 pb-8">
+      <div className="flex flex-col items-center gap-4 mx-4 my-4 pb-8">
         <Header />
         <GenreSelector />
         <ResultCard
