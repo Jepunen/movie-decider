@@ -1,9 +1,9 @@
 import React from "react";
-import type { Movie } from "../../../types/movies";
+import type { CustomMovie } from "../../../types/movies";
 import { genreMap } from "../../constants/genres";
 
 interface MovieDetailsProps {
-  movie: Movie;
+  movie: CustomMovie;
 }
 
 export const MovieDetails: React.FC<MovieDetailsProps> = ({ movie }) => {

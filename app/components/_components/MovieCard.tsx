@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import ReactCardFlip from "react-card-flip";
-import { MovieCardFront } from "./MovieCard/MovieCardFront";
-import { MovieCardBack } from "./MovieCard/MovieCardBack";
-import type { Movie } from "../../types/movies";
-import { genreMap } from "../constants/genres";
+import { MovieCardFront } from "../_MovieCard/MovieCardFront";
+import { MovieCardBack } from "../_MovieCard/MovieCardBack";
+import type { CustomMovie } from "@/types/movies";
+import { genreMap } from "@/app/constants/genres";
 
 export interface MovieCardProps {
-  movie: Movie;
+  movie: CustomMovie;
   IMDBRating?: string;
   RottenTomatoesRating?: string;
   MetacriticRating?: string;

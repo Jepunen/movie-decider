@@ -4,75 +4,90 @@ import {
   OMDBMovie,
   CustomMovie,
 } from "@/types/movies";
+import { useQuery } from "@tanstack/react-query";
+import pLimit from "p-limit";
 
 const CACHE_LENGTH = 86400; // 24 hours
 
 // https://developer.themoviedb.org/reference/discover-movie
-export async function getMovies(params: DiscoverMovieParams = {}) {
-  const url = new URL(process.env.TMDB_BASE_URL + "/discover/movie");
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: "Bearer " + process.env.TMDB_API_KEY,
-    },
-    next: { revalidate: CACHE_LENGTH }, // Cache for 24 hours
-  };
+export async function getMovies(
+	params: DiscoverMovieParams = {},
+): Promise<CustomMovie[]> {
+	console.log("getMovies called with params:", params);
+	const url = new URL(process.env.TMDB_BASE_URL + "/discover/movie");
+	const options = {
+		method: "GET",
+		headers: {
+			accept: "application/json",
+			Authorization: "Bearer " + process.env.TMDB_API_KEY,
+		},
+		next: { revalidate: CACHE_LENGTH }, // Cache for 24 hours
+	};
 
-  let queryString = new URLSearchParams();
+	let queryString = new URLSearchParams();
 
-  // Loop params and append to query string, ignore if none defined
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined) {
-      queryString.append(key, String(value));
-    }
-  });
+	// Loop params and append to query string, ignore if none defined
+	Object.entries(params).forEach(([key, value]) => {
+		if (value !== undefined) {
+			queryString.append(key, String(value));
+		}
+	});
 
-  const tmdbDiscoveryMovies = await fetch(
-    url + "?" + queryString.toString(),
-    options,
-  )
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
+	const tmdbDiscoveryMovies = await fetch(
+		url + "?" + queryString.toString(),
+		options,
+	)
+		.then((res) => res.json())
+		.catch((err) => console.error(err));
 
-  //console.log(tmdbDiscoveryMovies);
+	//console.log(tmdbDiscoveryMovies);
 
-  let outputMovies: CustomMovie[] = await Promise.all(
-    tmdbDiscoveryMovies.results.map(async (movie: Movie) => {
-      const omdbDetails: OMDBMovie = await getOMDBetails(movie.id);
+	// Take 10 random movies from the results
+	const randomizedMovies = getRandomMovies(
+		tmdbDiscoveryMovies.results,
+		10,
+		363731,
+	);
 
-      return {
-        title: movie.title,
-        description: movie.overview,
-        poster_url: "https://image.tmdb.org/t/p/w200" + movie.poster_path,
-        release_date: movie.release_date,
-        runtime: omdbDetails.Runtime,
-        genres: movie.genre_ids,
-        imdb_id: omdbDetails.imdbID,
-        imdb_url: `https://www.imdb.com/title/${omdbDetails.imdbID}/`,
-        ratings: omdbDetails.Ratings,
-        language: movie.original_language,
-        director: omdbDetails.Director,
-        actors: omdbDetails.Actors,
-      };
-    }),
-  );
+	const limit = pLimit(5); // Limit concurrent requests to 5
+	let outputMovies: CustomMovie[] = await Promise.all(
+		randomizedMovies.map((movie: Movie) =>
+			limit(async () => {
+				console.log("Fetching details for movie:", movie.title);
+				const omdbDetails: OMDBMovie = await getOMDBetails(movie.id);
 
-  // console.log(outputMovies);
+				return {
+					title: movie.title,
+					description: movie.overview,
+					poster_url:
+						"https://image.tmdb.org/t/p/w200" + movie.poster_path,
+					release_date: movie.release_date,
+					runtime: omdbDetails.Runtime,
+					genres: movie.genre_ids,
+					imdb_id: omdbDetails.imdbID,
+					imdb_url: `https://www.imdb.com/title/${omdbDetails.imdbID}/`,
+					ratings: omdbDetails.Ratings,
+					language: movie.original_language,
+					director: omdbDetails.Director,
+					actors: omdbDetails.Actors,
+				};
+			}),
+		),
+	);
 
-  outputMovies = getRandomMovies(outputMovies, 10, 363731);
+	// console.log(outputMovies);
 
-  return outputMovies;
+	return outputMovies;
 }
 
 function getRandomMovies(
-  movies: CustomMovie[],
-  count: number,
-  seed: number,
-): CustomMovie[] {
-  if (count >= movies.length) {
-    return movies;
-  }
+	movies: Movie[],
+	count: number,
+	seed: number,
+): Movie[] {
+	if (count >= movies.length) {
+		return movies;
+	}
 
   const shuffled = shuffleWithSeed(movies, seed);
   return shuffled.slice(0, count);
@@ -104,47 +119,69 @@ function seededRandom(seed: number) {
 
 // https://api.themoviedb.org/3/movie/{movie_id}
 export async function getMovieDetails(movieId: number) {
-  const url = new URL(process.env.TMDB_BASE_URL + "/movie/" + movieId);
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: "Bearer " + process.env.TMDB_API_KEY,
-    },
-    next: { revalidate: CACHE_LENGTH }, // Cache for 24 hours
-  };
+	console.log("Fetching movie details for ID:", movieId);
+	const url = new URL(process.env.TMDB_BASE_URL + "/movie/" + movieId);
+	const options = {
+		method: "GET",
+		headers: {
+			accept: "application/json",
+			Authorization: "Bearer " + process.env.TMDB_API_KEY,
+		},
+		next: { revalidate: CACHE_LENGTH }, // Cache for 24 hours
+	};
 
-  const res = await fetch(url, options);
+	const res = await fetch(url, options);
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch movie details");
-  }
+	if (!res.ok) {
+		throw new Error("Failed to fetch movie details");
+	}
 
-  return await res.json();
+	return await res.json();
 }
 
 // https://www.omdbapi.com/
 export async function getOMDBetails(tmdb_id: number) {
-  const movieDetails = await getMovieDetails(tmdb_id);
-  //console.log(movieDetails);
-  const url = new URL(
-    `https://www.omdbapi.com/?i=${movieDetails.imdb_id}&apikey=` +
-      process.env.OMDB_API_KEY,
-  );
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization: "Bearer " + process.env.TMDB_API_KEY,
-    },
-    next: { revalidate: CACHE_LENGTH }, // Cache for 24 hours
-  };
+	console.log("Fetching OMDB details for TMDB ID:", tmdb_id);
+	const movieDetails = await getMovieDetails(tmdb_id);
+	console.log("Movie details fetched:", movieDetails);
+	const url = new URL(
+		`https://www.omdbapi.com/?i=${movieDetails.imdb_id}&apikey=` +
+			process.env.OMDB_API_KEY,
+	);
+	const options = {
+		method: "GET",
+		headers: {
+			accept: "application/json",
+			Authorization: "Bearer " + process.env.TMDB_API_KEY,
+		},
+		next: { revalidate: CACHE_LENGTH }, // Cache for 24 hours
+	};
 
-  const res = await fetch(url, options);
+	const res = await fetch(url, options);
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch OMDB details");
-  }
+	if (!res.ok) {
+		throw new Error("Failed to fetch OMDB details");
+	}
 
-  return await res.json();
+	return await res.json();
+}
+
+interface MovieQueryParams {
+	with_genres?: number[];
+}
+
+export function useMovies(params: MovieQueryParams = {}, enabled = true) {
+	return useQuery<CustomMovie[]>({
+		queryKey: ["movies", params],
+		queryFn: async () => {
+			const genreParam = params.with_genres?.join("|");
+			const res = await fetch(
+				`/api/movies?with_genres=${genreParam ?? ""}`,
+			);
+			if (!res.ok) throw new Error("Failed to fetch movies");
+			return res.json();
+		},
+		enabled, // only fetch when enabled
+		staleTime: 1000 * 60 * 60 * 24,
+	});
 }

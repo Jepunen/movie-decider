@@ -1,8 +1,8 @@
 import React from "react";
-import type { Movie } from "../../../types/movies";
+import type { CustomMovie } from "../../../types/movies";
 
 interface MovieCardBackProps {
-  movie: Movie;
+  movie: CustomMovie;
   onClick: () => void;
 }
 

@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import type { Movie } from "../../types/movies";
-import { ResultCardDetails } from "./ResultCard/ResultCardDetails";
-import { ResultCardCompatibility } from "./ResultCard/ResultCardCompatibility";
-import { ResultCardPoster } from "./ResultCard/ResultCardPoster";
-import { ResultCardModal } from "./ResultCard/ResultCardModal";
+import type { CustomMovie } from "@/types/movies";
+import { ResultCardDetails } from "../_ResultCard/ResultCardDetails";
+import { ResultCardCompatibility } from "../_ResultCard/ResultCardCompatibility";
+import { ResultCardPoster } from "../_ResultCard/ResultCardPoster";
+import { ResultCardModal } from "../_ResultCard/ResultCardModal";
 import Button from "./Button";
 
 export interface ResultCardProps {
-  movie: Movie;
+  movie: CustomMovie;
   IMDBRating?: string;
   RottenTomatoesRating?: string;
   MetacriticRating?: string;

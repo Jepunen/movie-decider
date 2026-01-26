@@ -1,11 +1,11 @@
 import React from "react";
 import { MoviePoster } from "./MoviePoster";
 import { MovieDetails } from "./MovieDetails";
-import Reviews from "../Reviews";
-import type { Movie } from "../../../types/movies";
+import Reviews from "../_components/Reviews";
+import type { CustomMovie } from "@/types/movies";
 
 interface MovieCardFrontProps {
-  movie: Movie;
+  movie: CustomMovie;
   onClick: () => void;
 }
 
@@ -18,7 +18,7 @@ export const MovieCardFront: React.FC<MovieCardFrontProps> = ({
       className="p-4 rounded-xl shadow w-sm bg-secondary front h-120 flex flex-col overflow-y-auto"
       onClick={onClick}
     >
-      <MoviePoster posterPath={movie.poster_url} title={movie.title} />
+      <MoviePoster posterPath={movie.poster_url} title={movie.title} priority />
       <MovieDetails movie={movie} />
       <div className="ms-6 me-6">
         <Reviews

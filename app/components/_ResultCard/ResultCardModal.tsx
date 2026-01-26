@@ -6,13 +6,13 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import React, { Fragment } from "react";
-import type { Movie } from "../../../types/movies";
-import Button from "../Button";
+import type { CustomMovie } from "../../../types/movies";
+import Button from "../_components/Button";
 
 interface ResultCardModalProps {
   open: boolean;
   onClose: () => void;
-  movie: Movie;
+  movie: CustomMovie;
 }
 
 export const ResultCardModal: React.FC<ResultCardModalProps> = ({
