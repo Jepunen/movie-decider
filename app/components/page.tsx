@@ -13,9 +13,11 @@ import type { Movie } from "../../types/movies";
 import MovieCard from "./MovieCard";
 import ResultCard from "./ResultCard";
 import GenreSelector from "./GenreSelector";
+import ResultCard from "./ResultCard";
+import GenreSelector from "./GenreSelector";
 
 // SAMPLE MOVIE DATA for testing MovieForRating component - R.M.
-const sampleMovie = {
+const sampleMovie: Movie = {
   title: "Avatar: Fire and Ash",
   description:
     "In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by the ruthless Varang. Jake's family must fight for their survival and the future of Pandora in a conflict that pushes them to their emotional and physical limits.",
@@ -36,6 +38,8 @@ const sampleMovie = {
 };
 
 const ComponentsPage = () => {
+  const [guestCode, setGuestCode] = useState("");
+  const [selected, setSelected] = useState("action");
   const [guestCode, setGuestCode] = useState("");
   const [selected, setSelected] = useState("action");
 
@@ -92,3 +96,4 @@ const ComponentsPage = () => {
 };
 
 export default ComponentsPage;
+
