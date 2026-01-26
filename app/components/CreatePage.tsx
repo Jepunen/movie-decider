@@ -26,7 +26,7 @@ export default function CreatePage({ onNavigate }: CreatePageProps) {
       </div>
 
       <div className="flex-1 flex items-center justify-center w-full">
-        {selected !== "preferences" && <StatusImage status="default" />}
+        {selected !== "preferences" && <StatusImage status="hosting" />}
       </div>
 
       {selected === "preferences" && (
