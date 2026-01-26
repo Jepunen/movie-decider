@@ -6,6 +6,7 @@ import { socket } from "./socket";
 import HomePage from "./components/HomePage";
 import CreatePage from "./components/CreatePage";
 import { RemoveScroll } from "react-remove-scroll";
+import JoinPage from "./components/JoinPage";
 import BackButton from "./components/BackButton";
 
 type Screen = "home" | "create" | "join" | "review" | "results";
@@ -54,6 +55,7 @@ export default function Home() {
     <RemoveScroll>
       <div className="relative min-h-screen bg-primary p-4">
         {currentScreen === "home" && <HomePage onNavigate={handleNavigate} />}
+        {currentScreen === "join" && <JoinPage onNavigate={handleNavigate} />}
         {currentScreen === "create" && (
           <CreatePage onNavigate={handleNavigate} />
         )}
