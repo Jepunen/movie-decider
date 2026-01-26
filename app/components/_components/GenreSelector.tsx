@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import GenreButton from "./GenreSelector/GenreButton";
-import { genres } from "../constants/genres";
+import GenreButton from "../_GenreSelector/GenreButton";
+import { genres } from "@/app/constants/genres";
 
 type GenreSelectorProps = {
   onChange?: (selected: number[]) => void;

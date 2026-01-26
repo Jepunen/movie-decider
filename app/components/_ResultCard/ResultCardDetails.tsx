@@ -1,10 +1,10 @@
 import React from "react";
-import type { Movie } from "../../../types/movies";
+import type { CustomMovie } from "@/types/movies";
 import ResultCardReviews from "./ResultCardReviews";
 import { genreMap } from "@/app/constants/genres";
 
 interface ResultDetailsProps {
-  movie: Movie;
+  movie: CustomMovie;
 }
 
 export const ResultCardDetails: React.FC<ResultDetailsProps> = ({ movie }) => {
