@@ -61,7 +61,46 @@ export async function getMovies(params: DiscoverMovieParams = {}) {
 
 	// console.log(outputMovies);
 
+	outputMovies = getRandomMovies(outputMovies, 10, 363731);
+
 	return outputMovies;
+}
+
+function getRandomMovies(
+	movies: CustomMovie[],
+	count: number,
+	seed: number,
+): CustomMovie[] {
+	if (count >= movies.length) {
+		return movies;
+	}
+
+	const shuffled = shuffleWithSeed(movies, seed);
+	return shuffled.slice(0, count);
+}
+
+function shuffleWithSeed<T>(array: T[], seed: number): T[] {
+	const result = [...array];
+	let currentIndex = result.length;
+
+	while (currentIndex !== 0) {
+		const randomIndex = Math.floor(seededRandom(seed) * currentIndex);
+		seed++;
+
+		currentIndex--;
+
+		[result[currentIndex], result[randomIndex]] = [
+			result[randomIndex],
+			result[currentIndex],
+		];
+	}
+
+	return result;
+}
+
+function seededRandom(seed: number) {
+	let x = Math.sin(seed) * 10000;
+	return x - Math.floor(x);
 }
 
 // https://api.themoviedb.org/3/movie/{movie_id}
