@@ -5,8 +5,9 @@ import { useState, useEffect } from "react";
 import { socket } from "./socket";
 import HomePage from "./components/HomePage";
 import { RemoveScroll } from "react-remove-scroll";
+import WaitingPage from "./components/WaitingPage";
 
-type Screen = "home" | "create" | "join" | "review" | "results";
+type Screen = "home" | "create" | "join" | "waiting" | "review" | "results";
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -19,12 +20,12 @@ export default function Home() {
     if (code) setRoomCode(code);
   };
 
-// hande weboscket connection via socket.io
+  // hande weboscket connection via socket.io
   useEffect(() => {
     if (socket.connected) {
       onConnect();
     }
-  
+
     function onConnect() {
       setIsConnected(true);
       setTransport(socket.io.engine.transport.name);
@@ -54,7 +55,10 @@ export default function Home() {
         {currentScreen === "home" && (
           <HomePage onNavigate={handleNavigate} />
         )}
+        {currentScreen === "waiting" && (
+          <WaitingPage />
+        )}
       </div>
-    </RemoveScroll>
+    </RemoveScroll >
   );
 }
