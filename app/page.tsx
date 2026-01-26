@@ -4,8 +4,11 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { socket } from "./socket";
 import HomePage from "./components/HomePage";
+import CreatePage from "./components/CreatePage";
 import { RemoveScroll } from "react-remove-scroll";
 import WaitingPage from "./components/WaitingPage";
+import JoinPage from "./components/JoinPage";
+import BackButton from "./components/BackButton";
 
 type Screen = "home" | "create" | "join" | "waiting" | "review" | "results";
 
@@ -30,30 +33,32 @@ export default function Home() {
       setIsConnected(true);
       setTransport(socket.io.engine.transport.name);
 
-      socket.io.engine.on("upgrade", (transport => {
-        setTransport(transport.name)
-      }))
+      socket.io.engine.on("upgrade", (transport) => {
+        setTransport(transport.name);
+      });
     }
 
     function onDisconnect() {
-      setIsConnected(false)
-      setTransport("N/A")
+      setIsConnected(false);
+      setTransport("N/A");
     }
 
-    socket.on("connect", onConnect)
-    socket.on("disconnect", onDisconnect)
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
 
     return () => {
-      socket.off("connect", onConnect)
-      socket.off("disconnect", onDisconnect)
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
     };
-  }, [])
+  }, []);
 
   return (
     <RemoveScroll>
-      <div className="min-h-screen bg-primary p-4">
-        {currentScreen === "home" && (
-          <HomePage onNavigate={handleNavigate} />
+      <div className="relative min-h-screen bg-primary p-4">
+        {currentScreen === "home" && <HomePage onNavigate={handleNavigate} />}
+        {currentScreen === "join" && <JoinPage onNavigate={handleNavigate} />}
+        {currentScreen === "create" && (
+          <CreatePage onNavigate={handleNavigate} />
         )}
         {currentScreen === "waiting" && (
           <WaitingPage />
