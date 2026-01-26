@@ -22,9 +22,16 @@ export const MovieCardFront: React.FC<MovieCardFrontProps> = ({
       <MovieDetails movie={movie} />
       <div className="ms-6 me-6">
         <Reviews
-          IMDBRating={movie.ratings?.find(r => r.Source === "Internet Movie Database")?.Value}
-          RottenTomatoesRating={movie.ratings?.find(r => r.Source === "Rotten Tomatoes")?.Value}
-          MetacriticRating={movie.ratings?.find(r => r.Source === "Metacritic")?.Value}
+          IMDBRating={
+            movie.ratings?.find((r) => r.Source === "Internet Movie Database")
+              ?.Value
+          }
+          RottenTomatoesRating={
+            movie.ratings?.find((r) => r.Source === "Rotten Tomatoes")?.Value
+          }
+          MetacriticRating={
+            movie.ratings?.find((r) => r.Source === "Metacritic")?.Value
+          }
         />
       </div>
     </div>
