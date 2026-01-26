@@ -19,7 +19,7 @@ export default function Home() {
     if (code) setRoomCode(code);
   };
 
-  // hande weboscket connection via socket.io
+  // Handle websocket connection via socket.io
   useEffect(() => {
     if (socket.connected) {
       onConnect();
