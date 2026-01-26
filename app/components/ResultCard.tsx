@@ -18,9 +18,6 @@ export interface ResultCardProps {
 
 const ResultCard: React.FC<ResultCardProps> = ({
   movie,
-  IMDBRating,
-  RottenTomatoesRating,
-  MetacriticRating,
   compatibilityScore,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,14 +25,11 @@ const ResultCard: React.FC<ResultCardProps> = ({
   return (
     <div className="flex w-full max-w-md h-48 rounded-lg shadow bg-secondary overflow-hidden">
       <div className="flex items-center justify-center h-full pl-2 pr-2">
-        <ResultCardPoster posterPath={movie.poster_path} title={movie.title} />
+        <ResultCardPoster posterPath={movie.poster_url} title={movie.title} />
       </div>
       <div className="flex flex-col justify-between p-0.5">
         <ResultCardDetails
           movie={movie}
-          IMDBRating={IMDBRating}
-          RottenTomatoesRating={RottenTomatoesRating}
-          MetacriticRating={MetacriticRating}
         />
       </div>
       <div className="flex flex-col items-center justify-between h-44 w-24 pt-6 pr-3 pl-1">

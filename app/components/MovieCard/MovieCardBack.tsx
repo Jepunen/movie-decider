@@ -13,10 +13,16 @@ export const MovieCardBack: React.FC<MovieCardBackProps> = ({ movie, onClick }) 
       onClick={onClick}
     >
       <h3 className="text-2xl font-bold mb-2">{movie.title ?? "Unknown Title"}</h3>
-      <p className="text-base mb-3">{movie.overview ?? "No description available"}</p>
-      <p className="text-sm">Popularity: {movie.popularity ?? "N/A"}</p>
-      <p className="text-sm">Votes: {movie.vote_count ?? "N/A"}</p>
-      <p className="text-sm">Release: {movie.release_date ?? "Unknown"}</p>
+      <p className="mb-2">{movie.description ?? "No description available."}</p>
+      <p className="mb-1">
+        <strong>Release Date:</strong> {movie.release_date ?? "N/A"}
+      </p>
+      <p className="mb-1">
+        <strong>Director:</strong> {movie.director ?? "N/A"}
+      </p>
+      <p className="mb-1">
+        <strong>Actors:</strong> {movie.actors ?? "N/A"}
+      </p>
     </div>
   );
 };

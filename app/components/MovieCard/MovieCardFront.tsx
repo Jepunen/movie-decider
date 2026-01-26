@@ -6,17 +6,11 @@ import type { Movie } from "../../../types/movies";
 
 interface MovieCardFrontProps {
   movie: Movie;
-  IMDBRating?: string;
-  RottenTomatoesRating?: string;
-  MetacriticRating?: string;
   onClick: () => void;
 }
 
 export const MovieCardFront: React.FC<MovieCardFrontProps> = ({
   movie,
-  IMDBRating,
-  RottenTomatoesRating,
-  MetacriticRating,
   onClick,
 }) => {
   return (
@@ -24,13 +18,13 @@ export const MovieCardFront: React.FC<MovieCardFrontProps> = ({
       className="p-4 rounded shadow max-w-md bg-secondary front h-150 flex flex-col overflow-y-auto"
       onClick={onClick}
     >
-      <MoviePoster posterPath={movie.poster_path} title={movie.title} />
+      <MoviePoster posterPath={movie.poster_url} title={movie.title} />
       <MovieDetails movie={movie} />
       <div className="ms-6 me-6">
         <Reviews
-          IMDBRating={IMDBRating}
-          RottenTomatoesRating={RottenTomatoesRating}
-          MetacriticRating={MetacriticRating}
+          IMDBRating={movie.ratings?.find(r => r.Source === "Internet Movie Database")?.Value}
+          RottenTomatoesRating={movie.ratings?.find(r => r.Source === "Rotten Tomatoes")?.Value}
+          MetacriticRating={movie.ratings?.find(r => r.Source === "Metacritic")?.Value}
         />
       </div>
     </div>
