@@ -22,7 +22,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
       <div className="flex flex-col gap-9 w-full mb-8">
         <Button onClick={() => onNavigate("create")}>Create Room</Button>
-        <Button onClick={() => onNavigate("waiting")}>Join Room</Button>
+        <Button onClick={() => onNavigate("join")}>Join Room</Button>
       </div>
     </div>
   );

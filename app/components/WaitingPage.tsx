@@ -2,17 +2,23 @@ import React, { useState } from "react";
 import Header from "./Header";
 import StatusImage from "./StatusImage";
 import PillButtonGroup from "./PillButtonGroup";
-// import BackButton from "./BackButton"; TODO: Uncomment when BackButton is implemented
+import BackButton from "./BackButton";
 import GenreSelector from "./GenreSelector";
+import type { Screen } from "@/types/screen";
 
-export default function WaitingPage() {
+interface JoinPageProps {
+  onNavigate: (screen: Screen, code?: string) => void;
+}
+
+export default function WaitingPage({ onNavigate }: JoinPageProps) {
   const [selected, setSelected] = useState("waiting");
   const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
 
   return (
     // min-h-[calc(100vh-2rem)] accounts for the p-4 padding in page.tsx
     <div className="flex flex-col items-center justify-between min-h-[calc(100vh-2rem)] w-full">
-      {/*<BackButton onClick={() => onNavigate("home")} /> TODO: Uncomment when BackButton is implemented*/}
+      <BackButton onClick={() => onNavigate("join")} />
+
 
       <div className="mt-8">
         <Header />
