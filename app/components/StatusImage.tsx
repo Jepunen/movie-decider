@@ -17,7 +17,7 @@ export default function StatusImage({ status }: StatusImageProps) {
     const { src, alt } = images[status] ?? images.default;
 
     return (
-        <div className="relative w-full h-80">
+        <div className="relative w-full h-64 sm:h-80">
             <Image
                 src={src}
                 alt={alt}

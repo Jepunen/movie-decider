@@ -44,9 +44,9 @@ const ComponentsPage = () => {
   const [selected, setSelected] = useState("action");
 
   return (
-    <div className="bg-primary">
-      <h2 className="text-accent text-center">Components Page</h2>
-      <div className="flex flex-col items-center gap-4 m-4">
+    <div className="bg-primary min-h-screen">
+      <h2 className="text-accent text-center pt-4">Components Page</h2>
+      <div className="flex flex-col items-center gap-4 m-4 pb-8">
         <Header />
         <GenreSelector />
         <ResultCard
