@@ -1,8 +1,8 @@
 import {
-	DiscoverMovieParams,
-	Movie,
-	OMDBMovie,
-	CustomMovie,
+  DiscoverMovieParams,
+  Movie,
+  OMDBMovie,
+  CustomMovie,
 } from "@/types/movies";
 import { useQuery } from "@tanstack/react-query";
 import pLimit from "p-limit";
@@ -89,32 +89,32 @@ function getRandomMovies(
 		return movies;
 	}
 
-	const shuffled = shuffleWithSeed(movies, seed);
-	return shuffled.slice(0, count);
+  const shuffled = shuffleWithSeed(movies, seed);
+  return shuffled.slice(0, count);
 }
 
 function shuffleWithSeed<T>(array: T[], seed: number): T[] {
-	const result = [...array];
-	let currentIndex = result.length;
+  const result = [...array];
+  let currentIndex = result.length;
 
-	while (currentIndex !== 0) {
-		const randomIndex = Math.floor(seededRandom(seed) * currentIndex);
-		seed++;
+  while (currentIndex !== 0) {
+    const randomIndex = Math.floor(seededRandom(seed) * currentIndex);
+    seed++;
 
-		currentIndex--;
+    currentIndex--;
 
-		[result[currentIndex], result[randomIndex]] = [
-			result[randomIndex],
-			result[currentIndex],
-		];
-	}
+    [result[currentIndex], result[randomIndex]] = [
+      result[randomIndex],
+      result[currentIndex],
+    ];
+  }
 
-	return result;
+  return result;
 }
 
 function seededRandom(seed: number) {
-	let x = Math.sin(seed) * 10000;
-	return x - Math.floor(x);
+  let x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
 }
 
 // https://api.themoviedb.org/3/movie/{movie_id}

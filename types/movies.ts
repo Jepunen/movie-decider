@@ -1,105 +1,105 @@
 // https://developer.themoviedb.org/reference/discover-movie
 export type DiscoverMovieParams = {
-	// Certification filters
-	certification?: string;
-	"certification.gte"?: string;
-	"certification.lte"?: string;
-	certification_country?: string;
+  // Certification filters
+  certification?: string;
+  "certification.gte"?: string;
+  "certification.lte"?: string;
+  certification_country?: string;
 
-	// Flags
-	include_adult?: boolean; // default: false
-	include_video?: boolean; // default: false
+  // Flags
+  include_adult?: boolean; // default: false
+  include_video?: boolean; // default: false
 
-	// Localization & pagination
-	language?: string; // default: en-US
-	region?: string;
-	watch_region?: string;
-	page?: number; // default: 1
+  // Localization & pagination
+  language?: string; // default: en-US
+  region?: string;
+  watch_region?: string;
+  page?: number; // default: 1
 
-	// Release dates
-	primary_release_year?: number;
-	"primary_release_date.gte"?: string; // YYYY-MM-DD
-	"primary_release_date.lte"?: string;
-	"release_date.gte"?: string;
-	"release_date.lte"?: string;
-	year?: number;
+  // Release dates
+  primary_release_year?: number;
+  "primary_release_date.gte"?: string; // YYYY-MM-DD
+  "primary_release_date.lte"?: string;
+  "release_date.gte"?: string;
+  "release_date.lte"?: string;
+  year?: number;
 
-	// Sorting
-	sort_by?:
-		| "popularity.asc"
-		| "popularity.desc"
-		| "release_date.asc"
-		| "release_date.desc"
-		| "revenue.asc"
-		| "revenue.desc"
-		| "primary_release_date.asc"
-		| "primary_release_date.desc"
-		| "original_title.asc"
-		| "original_title.desc"
-		| "vote_average.asc"
-		| "vote_average.desc"
-		| "vote_count.asc"
-		| "vote_count.desc";
+  // Sorting
+  sort_by?:
+    | "popularity.asc"
+    | "popularity.desc"
+    | "release_date.asc"
+    | "release_date.desc"
+    | "revenue.asc"
+    | "revenue.desc"
+    | "primary_release_date.asc"
+    | "primary_release_date.desc"
+    | "original_title.asc"
+    | "original_title.desc"
+    | "vote_average.asc"
+    | "vote_average.desc"
+    | "vote_count.asc"
+    | "vote_count.desc";
 
-	// Voting
-	"vote_average.gte"?: number;
-	"vote_average.lte"?: number;
-	"vote_count.gte"?: number;
-	"vote_count.lte"?: number;
+  // Voting
+  "vote_average.gte"?: number;
+  "vote_average.lte"?: number;
+  "vote_count.gte"?: number;
+  "vote_count.lte"?: number;
 
-	// Runtime
-	"with_runtime.gte"?: number;
-	"with_runtime.lte"?: number;
+  // Runtime
+  "with_runtime.gte"?: number;
+  "with_runtime.lte"?: number;
 
-	// People & companies
-	with_cast?: string;
-	with_crew?: string;
-	with_people?: string;
-	with_companies?: string;
-	without_companies?: string;
+  // People & companies
+  with_cast?: string;
+  with_crew?: string;
+  with_people?: string;
+  with_companies?: string;
+  without_companies?: string;
 
-	// Genres & keywords
-	with_genres?: string;
-	without_genres?: string;
-	with_keywords?: string;
-	without_keywords?: string;
+  // Genres & keywords
+  with_genres?: string;
+  without_genres?: string;
+  with_keywords?: string;
+  without_keywords?: string;
 
-	// Language & origin
-	with_original_language?: string;
-	with_origin_country?: string;
+  // Language & origin
+  with_original_language?: string;
+  with_origin_country?: string;
 
-	// Release type
-	with_release_type?: string; // comma or pipe separated values [1–6]
+  // Release type
+  with_release_type?: string; // comma or pipe separated values [1–6]
 
-	// Watch providers
-	with_watch_monetization_types?:
-		| "flatrate"
-		| "free"
-		| "ads"
-		| "rent"
-		| "buy"
-		| `${"flatrate" | "free" | "ads" | "rent" | "buy"},${string}`
-		| `${"flatrate" | "free" | "ads" | "rent" | "buy"}|${string}`;
+  // Watch providers
+  with_watch_monetization_types?:
+    | "flatrate"
+    | "free"
+    | "ads"
+    | "rent"
+    | "buy"
+    | `${"flatrate" | "free" | "ads" | "rent" | "buy"},${string}`
+    | `${"flatrate" | "free" | "ads" | "rent" | "buy"}|${string}`;
 
-	with_watch_providers?: string;
-	without_watch_providers?: string;
+  with_watch_providers?: string;
+  without_watch_providers?: string;
 };
 
 export type Movie = {
-	adult: boolean;
-	backdrop_path: string | null;
-	genre_ids: number[];
-	id: number;
-	original_language: string;
-	original_title: string;
-	overview: string;
-	popularity: number;
-	poster_path: string | null;
-	release_date: string;
-	title: string;
-	video: boolean;
-	vote_average: number;
-	vote_count: number;
+  adult: boolean;
+  backdrop_path: string | null;
+  genre_ids: number[];
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string | null;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
 };
 
 export type Result = {
