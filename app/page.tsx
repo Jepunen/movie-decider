@@ -237,10 +237,8 @@ export default function Home() {
       <div className="relative min-h-screen bg-primary p-4">
         {currentScreen === "home" && <HomePage onNavigate={handleNavigate} />}
         {currentScreen === "join" && <JoinPage onNavigate={handleNavigate} />}
-        {currentScreen === "create" && (
-          <CreatePage onNavigate={handleNavigate} />
-        )}
-        {currentScreen === "waiting" && <WaitingPage />}
+        {currentScreen === "create" && <CreatePage onNavigate={handleNavigate} />}
+        {currentScreen === "waiting" && <WaitingPage onNavigate={handleNavigate} />}
         {currentScreen === "review" && <VotingPage movies={sampleMovies} onNavigate={handleNavigate} />}
         {currentScreen === "results" && <ResultsPage results={mockResults} />}
       </div>

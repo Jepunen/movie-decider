@@ -4,7 +4,7 @@ import StatusImage from "./StatusImage";
 import Button from "./Button";
 import RoomCode from "./RoomCode";
 import type { Screen } from "@/types/screen";
-// import BackButton from "./BackButton"; TODO: Uncomment when BackButton is merged from PR #26
+import BackButton from "./BackButton";
 
 interface JoinPageProps {
     onNavigate: (screen: Screen, code?: string) => void;
@@ -16,7 +16,7 @@ export default function JoinPage({ onNavigate }: JoinPageProps) {
     return (
         // min-h-[calc(100vh-2rem)] accounts for the p-4 padding in page.tsx
         <div className="flex flex-col items-center justify-between min-h-[calc(100vh-2rem)] w-full">
-            {/*<BackButton onClick={() => onNavigate("home")} /> TODO: UNCOMMENT THIS*/}
+            <BackButton onClick={() => onNavigate("home")} />
 
             <div className="mt-8">
                 <Header />
@@ -39,7 +39,7 @@ export default function JoinPage({ onNavigate }: JoinPageProps) {
             <div className="flex flex-col gap-9 w-full mt-12">
                 <Button
                     onClick={() => {
-                        onNavigate("review");
+                        onNavigate("waiting");
                     }}
                 >
                     Join Game
