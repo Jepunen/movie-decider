@@ -1,1 +1,7 @@
-export type Screen = "home" | "create" | "join" | "review" | "results";
+export type Screen =
+  | "home"
+  | "create"
+  | "join"
+  | "waiting"
+  | "review"
+  | "results";

@@ -6,10 +6,11 @@ import { socket } from "./socket";
 import HomePage from "./components/HomePage";
 import CreatePage from "./components/CreatePage";
 import { RemoveScroll } from "react-remove-scroll";
+import WaitingPage from "./components/WaitingPage";
 import JoinPage from "./components/JoinPage";
 import BackButton from "./components/BackButton";
 
-type Screen = "home" | "create" | "join" | "review" | "results";
+type Screen = "home" | "create" | "join" | "waiting" | "review" | "results";
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -59,6 +60,7 @@ export default function Home() {
         {currentScreen === "create" && (
           <CreatePage onNavigate={handleNavigate} />
         )}
+        {currentScreen === "waiting" && <WaitingPage />}
       </div>
     </RemoveScroll>
   );
