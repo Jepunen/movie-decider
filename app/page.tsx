@@ -60,10 +60,8 @@ export default function Home() {
         {currentScreen === "create" && (
           <CreatePage onNavigate={handleNavigate} />
         )}
-        {currentScreen === "waiting" && (
-          <WaitingPage />
-        )}
+        {currentScreen === "waiting" && <WaitingPage />}
       </div>
-    </RemoveScroll >
+    </RemoveScroll>
   );
 }
