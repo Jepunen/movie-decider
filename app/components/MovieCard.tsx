@@ -3,6 +3,7 @@ import ReactCardFlip from "react-card-flip";
 import { MovieCardFront } from "./MovieCard/MovieCardFront";
 import { MovieCardBack } from "./MovieCard/MovieCardBack";
 import type { Movie } from "../../types/movies";
+import { genreMap } from "../constants/genres";
 
 export interface MovieCardProps {
   movie: Movie;
@@ -13,21 +14,15 @@ export interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({
   movie,
-  IMDBRating,
-  RottenTomatoesRating,
-  MetacriticRating,
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   return (
-    <div className="p-4">
+    <div >
       <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
         <MovieCardFront
           key="front"
           movie={movie}
-          IMDBRating={IMDBRating}
-          RottenTomatoesRating={RottenTomatoesRating}
-          MetacriticRating={MetacriticRating}
           onClick={() => setIsFlipped(true)}
         />
         <MovieCardBack
