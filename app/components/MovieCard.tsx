@@ -18,7 +18,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
   const [isFlipped, setIsFlipped] = useState(false);
 
   return (
-    <div className="p-4">
+    <div >
       <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
         <MovieCardFront
           key="front"

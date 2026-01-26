@@ -7,6 +7,7 @@ import type { Screen } from "@/types/screen";
 interface HomePageProps {
   onNavigate: (screen: Screen, code?: string) => void;
 }
+
 export default function HomePage({ onNavigate }: HomePageProps) {
   return (
     // min-h-[calc(100vh-2rem)] accounts for the p-4 padding in page.tsx
@@ -21,7 +22,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
       <div className="flex flex-col gap-9 w-full mb-8">
         <Button onClick={() => onNavigate("create")}>Create Room</Button>
-        <Button onClick={() => onNavigate("results")}>Join Room</Button>
+        <Button onClick={() => onNavigate("join")}>Join Room</Button>
       </div>
     </div>
   );
