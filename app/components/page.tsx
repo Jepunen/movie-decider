@@ -49,13 +49,8 @@ const ComponentsPage = () => {
       <div className="flex flex-col items-center gap-4 m-4">
         <Header />
         <GenreSelector />
-        <ResultCard
-          movie={sampleMovie}
-          compatibilityScore={95}
-        />
-        <MovieCard
-          movie={sampleMovie}
-        />
+        <ResultCard movie={sampleMovie} compatibilityScore={95} />
+        <MovieCard movie={sampleMovie} />
         <div className="flex flex-row gap-3">
           <RateButton rate="worst" />
           <RateButton rate="bad" />
@@ -96,4 +91,3 @@ const ComponentsPage = () => {
 };
 
 export default ComponentsPage;
-

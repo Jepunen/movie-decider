@@ -7,14 +7,14 @@ interface ResultDetailsProps {
   movie: Movie;
 }
 
-export const ResultCardDetails: React.FC<ResultDetailsProps> = ({
-  movie,
-}) => {
+export const ResultCardDetails: React.FC<ResultDetailsProps> = ({ movie }) => {
   const releaseYear = movie.release_date
     ? new Date(movie.release_date).getFullYear()
     : "Unknown";
 
-  const genres = movie.genres?.length ? movie.genres.map(genre => genreMap[genre] || genre).join(", ") : "N/A";
+  const genres = movie.genres?.length
+    ? movie.genres.map((genre) => genreMap[genre] || genre).join(", ")
+    : "N/A";
 
   return (
     <div className="flex flex-col justify-center h-full space-y-1">
@@ -25,9 +25,16 @@ export const ResultCardDetails: React.FC<ResultDetailsProps> = ({
       </div>
       <p className="text-sm">{genres}</p>
       <ResultCardReviews
-        IMDBRating={movie.ratings?.find(r => r.Source === "Internet Movie Database")?.Value}
-        RottenTomatoesRating={movie.ratings?.find(r => r.Source === "Rotten Tomatoes")?.Value}
-        MetacriticRating={movie.ratings?.find(r => r.Source === "Metacritic")?.Value}
+        IMDBRating={
+          movie.ratings?.find((r) => r.Source === "Internet Movie Database")
+            ?.Value
+        }
+        RottenTomatoesRating={
+          movie.ratings?.find((r) => r.Source === "Rotten Tomatoes")?.Value
+        }
+        MetacriticRating={
+          movie.ratings?.find((r) => r.Source === "Metacritic")?.Value
+        }
       />
     </div>
   );
