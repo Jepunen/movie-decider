@@ -20,10 +20,10 @@ export const ResultCardDetails: React.FC<ResultDetailsProps> = ({
     <div className="flex flex-col justify-center h-full space-y-1">
       <h2 className="font-bold text-xl">{movie.title}</h2>
       <div className="flex flex-row gap-3">
-        <p className="text-lg">{releaseYear}</p>
-        <p className="text-lg">{movie.runtime}min</p>
+        <p className="text-md">{releaseYear}</p>
+        <p className="text-md">{movie.runtime}min</p>
       </div>
-      <p className="text-md">{genres}</p>
+      <p className="text-sm">{genres}</p>
       <ResultCardReviews
         IMDBRating={movie.ratings?.find(r => r.Source === "Internet Movie Database")?.Value}
         RottenTomatoesRating={movie.ratings?.find(r => r.Source === "Rotten Tomatoes")?.Value}

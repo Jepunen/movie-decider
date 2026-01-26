@@ -102,3 +102,8 @@ export type Movie = {
   director: string;
   actors: string;
 };
+
+export type Result = {
+  movie: Movie;
+  compatibility: number;
+};
