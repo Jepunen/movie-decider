@@ -4,6 +4,7 @@ import { genres } from "../constants/genres";
 
 type GenreSelectorProps = {
   onChange?: (selected: number[]) => void;
+  selected?: number[];
 };
 
 // Usage:
@@ -13,14 +14,14 @@ type GenreSelectorProps = {
 //     <GenreSelector onChange={setSelectedGenres} />
 // - The parent can now use `selectedGenres` as needed.
 
-export default function GenreSelector({ onChange }: GenreSelectorProps) {
-  const [selected, setSelected] = useState<number[]>([]);
-
+export default function GenreSelector({
+  onChange,
+  selected = [],
+}: GenreSelectorProps) {
   const toggleGenre = (id: number) => {
     const updated = selected.includes(id)
       ? selected.filter((g) => g !== id)
       : [...selected, id];
-    setSelected(updated);
     if (onChange) {
       onChange(updated);
     }
