@@ -51,9 +51,7 @@ export default function Home() {
   return (
     <RemoveScroll>
       <div className="min-h-screen bg-primary p-4">
-        {currentScreen === "home" && (
-          <HomePage onNavigate={handleNavigate} />
-        )}
+        {currentScreen === "home" && <HomePage onNavigate={handleNavigate} />}
       </div>
     </RemoveScroll>
   );
