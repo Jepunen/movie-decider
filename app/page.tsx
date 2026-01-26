@@ -13,7 +13,6 @@ import ResultsPage from "./components/ResultPage";
 import VotingPage from "./components/VotingPage";
 import { Movie, Result } from "@/types/movies";
 
-
 type Screen = "home" | "create" | "join" | "waiting" | "review" | "results";
 
 export default function Home() {
@@ -21,7 +20,6 @@ export default function Home() {
   const [transport, setTransport] = useState<string>("N/A");
   const [currentScreen, setCurrentScreen] = useState<Screen>("home");
   const [roomCode, setRoomCode] = useState<string>("");
-
 
   // TODO: Implement movie fetching and passing to VotingPage after user starts the game from hosts CreatePage
   // TODO: Implement results fetching and passing to ResultsPage after voting is complete
@@ -60,16 +58,16 @@ export default function Home() {
     };
   }, []);
 
-
-
   //! THIS IS A TEMPORARY MOCKUP FOR TESTING PURPOSES ONLY
   // TODO: Replace with actual API call
   const mockResults: Result[] = [
     {
       movie: {
         title: "Avatar: Fire and Ash",
-        description: "In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by the ruthless Varang. Jake's family must fight for their survival and the future of Pandora in a conflict that pushes them to their emotional and physical limits.",
-        poster_url: "https://image.tmdb.org/t/p/w200/bRBeSHfGHwkEpImlhxPmOcUsaeg.jpg",
+        description:
+          "In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by the ruthless Varang. Jake's family must fight for their survival and the future of Pandora in a conflict that pushes them to their emotional and physical limits.",
+        poster_url:
+          "https://image.tmdb.org/t/p/w200/bRBeSHfGHwkEpImlhxPmOcUsaeg.jpg",
         release_date: "2025-12-17",
         runtime: "162",
         genres: [12, 878, 18],
@@ -89,7 +87,8 @@ export default function Home() {
     {
       movie: {
         title: "Inception",
-        description: "A thief who enters the dreams of others to steal secrets from their subconscious is given a chance to have his criminal history erased.",
+        description:
+          "A thief who enters the dreams of others to steal secrets from their subconscious is given a chance to have his criminal history erased.",
         poster_url: null,
         release_date: "2010-07-16",
         runtime: "148",
@@ -110,7 +109,8 @@ export default function Home() {
     {
       movie: {
         title: "The Grand Budapest Hotel",
-        description: "A whimsical tale of a legendary concierge at a famous European hotel between the wars and his friendship with a young employee.",
+        description:
+          "A whimsical tale of a legendary concierge at a famous European hotel between the wars and his friendship with a young employee.",
         poster_url: null,
         release_date: "2014-03-28",
         runtime: "99",
@@ -131,7 +131,8 @@ export default function Home() {
     {
       movie: {
         title: "The Grand Budapest Hotel",
-        description: "A whimsical tale of a legendary concierge at a famous European hotel between the wars and his friendship with a young employee.",
+        description:
+          "A whimsical tale of a legendary concierge at a famous European hotel between the wars and his friendship with a young employee.",
         poster_url: null,
         release_date: "2014-03-28",
         runtime: "99",
@@ -152,7 +153,8 @@ export default function Home() {
     {
       movie: {
         title: "The Grand Budapest Hotel",
-        description: "A whimsical tale of a legendary concierge at a famous European hotel between the wars and his friendship with a young employee.",
+        description:
+          "A whimsical tale of a legendary concierge at a famous European hotel between the wars and his friendship with a young employee.",
         poster_url: null,
         release_date: "2014-03-28",
         runtime: "99",
@@ -177,8 +179,10 @@ export default function Home() {
   const sampleMovies: Movie[] = [
     {
       title: "Avatar: Fire and Ash",
-      description: "In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by the ruthless Varang. Jake's family must fight for their survival and the future of Pandora in a conflict that pushes them to their emotional and physical limits.",
-      poster_url: "https://image.tmdb.org/t/p/w200/bRBeSHfGHwkEpImlhxPmOcUsaeg.jpg",
+      description:
+        "In the wake of the devastating war against the RDA and the loss of their eldest son, Jake Sully and Neytiri face a new threat on Pandora: the Ash People, a violent and power-hungry Na'vi tribe led by the ruthless Varang. Jake's family must fight for their survival and the future of Pandora in a conflict that pushes them to their emotional and physical limits.",
+      poster_url:
+        "https://image.tmdb.org/t/p/w200/bRBeSHfGHwkEpImlhxPmOcUsaeg.jpg",
       release_date: "2025-12-17",
       runtime: "162",
       genres: [12, 878, 18],
@@ -195,7 +199,8 @@ export default function Home() {
     },
     {
       title: "The Grand Budapest Hotel",
-      description: "A whimsical tale of a legendary concierge at a famous European hotel between the wars and his friendship with a young employee.",
+      description:
+        "A whimsical tale of a legendary concierge at a famous European hotel between the wars and his friendship with a young employee.",
       poster_url: null,
       release_date: "2014-03-28",
       runtime: "99",
@@ -213,7 +218,8 @@ export default function Home() {
     },
     {
       title: "Inception",
-      description: "A thief who enters the dreams of others to steal secrets from their subconscious is given a chance to have his criminal history erased.",
+      description:
+        "A thief who enters the dreams of others to steal secrets from their subconscious is given a chance to have his criminal history erased.",
       poster_url: null,
       release_date: "2010-07-16",
       runtime: "148",
@@ -231,15 +237,20 @@ export default function Home() {
     },
   ];
 
-
   return (
     <RemoveScroll>
       <div className="relative min-h-screen bg-primary p-4">
         {currentScreen === "home" && <HomePage onNavigate={handleNavigate} />}
         {currentScreen === "join" && <JoinPage onNavigate={handleNavigate} />}
-        {currentScreen === "create" && <CreatePage onNavigate={handleNavigate} />}
-        {currentScreen === "waiting" && <WaitingPage onNavigate={handleNavigate} />}
-        {currentScreen === "review" && <VotingPage movies={sampleMovies} onNavigate={handleNavigate} />}
+        {currentScreen === "create" && (
+          <CreatePage onNavigate={handleNavigate} />
+        )}
+        {currentScreen === "waiting" && (
+          <WaitingPage onNavigate={handleNavigate} />
+        )}
+        {currentScreen === "review" && (
+          <VotingPage movies={sampleMovies} onNavigate={handleNavigate} />
+        )}
         {currentScreen === "results" && <ResultsPage results={mockResults} />}
       </div>
     </RemoveScroll>

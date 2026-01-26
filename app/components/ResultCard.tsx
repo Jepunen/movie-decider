@@ -28,9 +28,7 @@ const ResultCard: React.FC<ResultCardProps> = ({
         <ResultCardPoster posterPath={movie.poster_url} title={movie.title} />
       </div>
       <div className="flex flex-col justify-between p-0.5">
-        <ResultCardDetails
-          movie={movie}
-        />
+        <ResultCardDetails movie={movie} />
       </div>
       <div className="flex flex-col items-center justify-between h-44 w-24 pt-6 pr-3 pl-1">
         <ResultCardCompatibility compatibilityScore={compatibilityScore} />

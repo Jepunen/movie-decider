@@ -6,7 +6,10 @@ interface MoviePosterProps {
   title?: string | null;
 }
 
-export const MoviePoster: React.FC<MoviePosterProps> = ({ posterPath, title }) => {
+export const MoviePoster: React.FC<MoviePosterProps> = ({
+  posterPath,
+  title,
+}) => {
   return (
     <div className="relative h-76 w-48 mb-2 shrink-0 self-center">
       <Image
