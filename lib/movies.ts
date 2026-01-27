@@ -170,7 +170,7 @@ interface MovieQueryParams {
 	with_genres?: number[];
 }
 
-export function useMovies(params: MovieQueryParams = {}, enabled = true) {
+export function useMovies(params: MovieQueryParams = {}, enabled = false) {
 	return useQuery<CustomMovie[]>({
 		queryKey: ["movies", params],
 		queryFn: async () => {
