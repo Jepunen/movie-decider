@@ -3,6 +3,7 @@
 // Client will then establish WebSocket connection using this sessionID
 
 import { getSessionData } from "@/redis/redis";
+import { escape } from "querystring";
 
 type RequestBody = {
   sessionID: string;
@@ -17,7 +18,8 @@ type ResponseData = {
 export async function POST(request: Request) {
   try {
     const body: RequestBody = await request.json();
-    const sessionID: string | undefined = body.sessionID;
+    const sessionID: string | undefined = escape(body.sessionID);
+
 
     // Validate sessionID is provided
     if (!sessionID) {
@@ -35,7 +37,7 @@ export async function POST(request: Request) {
     if (!sessionData) {
       return Response.json(
         { 
-          message: "Session not found or has expired" 
+          message: "Session not found" 
         } as ResponseData,
         { status: 404 }
       );
@@ -51,8 +53,8 @@ export async function POST(request: Request) {
     return Response.json(response, { status: 200 });
   } catch (error) {
     return Response.json(
-      { 
-        message: "Failed to join session" 
+      {
+        message: "Failed to join session"
       } as ResponseData,
       { status: 500 }
     );

@@ -2,13 +2,16 @@
 // workflow: create session ID, store in Redis, return to client
 // Client will then establish WebSocket connection using this sessionID
 
-import { randomInt } from "crypto";
+import { hash, randomInt } from "crypto";
 import { getRedis } from "@/redis/redis";
+import { redisData, redisScoreType } from "@/types/requestData";
 
 type ResponseData = {
   sessionID: number;
   message?: string;
 }
+
+
 
 export async function POST(req: Request) {
   try {
@@ -23,18 +26,20 @@ export async function POST(req: Request) {
     const sessionID = randomInt(100000, 999999);
     
     // Initialize session in Redis with empty data
+    const seed: redisData = {
+      createdAt: new Date().toISOString(),
+      sessionState: false,
+      movies: {}
+    }
+
     await redis.set(
       `session:${sessionID}`,
-      JSON.stringify({ 
-        createdAt: new Date().toISOString(),
-        movies: [],
-        participants: []
-      }),
+      JSON.stringify(seed),
       // Set expiration to 1h (3600 seconds)
       "EX",
       3600
     );
-    
+
     const response: ResponseData = {
       message: "Session created successfully",
       sessionID
