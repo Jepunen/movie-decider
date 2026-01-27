@@ -12,17 +12,18 @@ interface VotingPageProps {
 	movies: CustomMovie[] | undefined;
 	setResults: Dispatch<SetStateAction<Result[]>>;
 	onNavigate: (screen: Screen) => void;
-	roomCode: string; // Add this prop
+	roomCode: string;
 }
 
 export default function VotingPage({
 	movies,
 	setResults,
 	onNavigate,
-	roomCode, // Add this
+	roomCode,
 }: VotingPageProps) {
 	const [currentMovie, setCurrentMovie] = useState(0);
 
+	// Preload next movie poster
 	useEffect(() => {
 		if (!movies) return;
 		const next = movies[currentMovie + 1];
@@ -31,6 +32,13 @@ export default function VotingPage({
 		const img = new Image();
 		img.src = next.poster_url;
 	}, [currentMovie, movies]);
+
+	// Navigate to results when all movies are rated
+	useEffect(() => {
+		if (movies && currentMovie >= movies.length) {
+			onNavigate("results");
+		}
+	}, [currentMovie, movies, onNavigate]);
 
 	const sendVoteToAPI = async (movie: CustomMovie, rate: number) => {
 		try {
@@ -46,18 +54,15 @@ export default function VotingPage({
 
 			if (response.ok) {
 				const data = await response.json();
-				////console.log("✅ Vote submitted:", data);
+				// console.log("✅ Vote submitted:", data);
 			}
 		} catch (error) {
 			console.error("❌ Error submitting vote:", error);
 		}
 	};
 
-	if (!movies) {
-		return <div>Loading movies...</div>;
-	}
-
 	const handleVote = async (rate: number) => {
+		if (!movies) return;
 		await sendVoteToAPI(movies[currentMovie], rate);
 		setCurrentMovie((prev) => prev + 1);
 	};
@@ -66,18 +71,13 @@ export default function VotingPage({
 		setCurrentMovie((prev) => prev + 1);
 	};
 
+	// Early returns for loading and completion states
+	if (!movies) {
+		return <div>Loading movies...</div>;
+	}
+
 	if (currentMovie >= movies.length) {
-		return (
-			<div className="flex flex-col items-center justify-center min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm mx-auto gap-6 px-2 pb-6">
-				<Header />
-				<div className="text-2xl font-bold text-accent text-center">
-					All movies rated! 🎉
-				</div>
-				<Button onClick={() => onNavigate("results")}>
-					See Results
-				</Button>
-			</div>
-		);
+		return null;
 	}
 
 	const movie = movies[currentMovie];

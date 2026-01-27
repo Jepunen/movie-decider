@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Movie Decider",
+	title: "NextMovie",
 	description: "Decide what movie to watch next!",
 };
 

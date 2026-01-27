@@ -20,6 +20,7 @@ export default function Home() {
 
 	const [movies, setMovies] = useState<CustomMovie[]>([]);
 	const [results, setResults] = useState<Result[]>([]);
+	const [playerCount, setPlayerCount] = useState<number>(0);
 
 	// Keep ref in sync with state
 	useEffect(() => {
@@ -36,6 +37,11 @@ export default function Home() {
 
 		socket.on("joined-session", (data) => {
 			//console.log("✅ Successfully joined session:", data);
+		});
+
+		socket.on("player-count", (data) => {
+			console.log("👥 Player count updated:", data.count);
+			setPlayerCount(data.count);
 		});
 
 		socket.on("session-update", (data) => {
@@ -144,12 +150,14 @@ export default function Home() {
 							onNavigate={handleNavigate}
 							setMovies={setMovies}
 							roomCode={roomCode}
+							playerCount={playerCount}
 						/>
 					)}
 					{currentScreen === "waiting" && (
 						<WaitingPage
 							onNavigate={handleNavigate}
 							roomCode={roomCode}
+							playerCount={playerCount}
 						/>
 					)}
 					{currentScreen === "review" && (

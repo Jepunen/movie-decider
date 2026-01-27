@@ -15,13 +15,18 @@ app.prepare().then(() => {
 
 	const io = new Server(httpServer, {
 		cors: {
-			origin:
-				process.env.NODE_ENV === "production"
-					? false
-					: ["http://localhost:3000"],
+			origin: process.env.NODE_ENV === "production" ? false : ["http://localhost:3000"],
 			methods: ["GET", "POST"],
 		},
 	});
+
+	// Helper to broadcast player count to a session
+	const broadcastPlayerCount = (sessionID) => {
+		const room = io.sockets.adapter.rooms.get(sessionID);
+		const count = room ? room.size : 0;
+		//console.log(`👥 Session ${sessionID} has ${count} players`);
+		io.to(sessionID).emit("player-count", { count });
+	};
 
 	io.on("connection", (socket) => {
 		//console.log("✅ Client connected:", socket.id);
@@ -29,6 +34,8 @@ app.prepare().then(() => {
 		socket.on("join-session", async (sessionID) => {
 			//console.log(`🔵 JOIN-SESSION received from ${socket.id} for session ${sessionID}`);
 			try {
+				const sessionIDStr = String(sessionID);
+
 				const subscriber = new Redis({
 					host: process.env.REDIS_HOST,
 					port: Number(process.env.REDIS_PORT),
@@ -37,7 +44,7 @@ app.prepare().then(() => {
 				const channelName = `session:${sessionID}:updates`;
 
 				await subscriber.subscribe(channelName);
-				socket.join(sessionID);
+				socket.join(sessionIDStr);
 
 				//console.log(`✅ Client ${socket.id} successfully joined session ${sessionID}`);
 
@@ -48,26 +55,30 @@ app.prepare().then(() => {
 							//console.log(`📤 Sending update to ${socket.id}:`, data);
 							socket.emit("session-update", data);
 						} catch (err) {
-							console.error(
-								"❌ Error parsing Redis message:",
-								err,
-							);
+							//console.error("❌ Error parsing Redis message:", err);
 						}
 					}
 				});
 
 				socket.data.subscriber = subscriber;
-				socket.data.sessionID = sessionID;
+				socket.data.sessionID = sessionIDStr;
+
+				broadcastPlayerCount(sessionIDStr);
 
 				socket.emit("joined-session", { sessionID });
 			} catch (error) {
-				console.error("❌ Error joining session:", error);
+				//console.error("❌ Error joining session:", error);
 				socket.emit("error", { message: "Failed to join session" });
 			}
 		});
 
 		socket.on("disconnect", () => {
 			//console.log("❌ Client disconnected:", socket.id);
+
+			const sessionID = socket.data.sessionID;
+			if (sessionID) {
+				broadcastPlayerCount(sessionID);
+			}
 
 			if (socket.data.subscriber) {
 				socket.data.subscriber.disconnect();

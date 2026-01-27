@@ -16,12 +16,14 @@ interface CreatePageProps {
 	onNavigate: (screen: Screen, code?: string) => void;
 	setMovies: (movies: any[]) => void;
 	roomCode: string;
+	playerCount: number;
 }
 
 export default function CreatePage({
 	onNavigate,
 	setMovies,
 	roomCode,
+	playerCount
 }: CreatePageProps) {
 	const [selected, setSelected] = useState("create");
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
@@ -84,6 +86,11 @@ export default function CreatePage({
 
 			<div className="pt-10">
 				<Header />
+			</div>
+
+			<div className="flex items-center gap-2 text-accent">
+				<span className="text-2xl">👥</span>
+				<span className="text-xl font-semibold">{playerCount} {playerCount === 1 ? 'player' : 'players'}</span>
 			</div>
 
 			<div className="flex-1 flex items-center justify-center w-full px-2">

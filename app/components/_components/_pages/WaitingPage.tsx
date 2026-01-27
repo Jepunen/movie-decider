@@ -9,9 +9,10 @@ import type { Screen } from "@/types/screen";
 interface JoinPageProps {
 	onNavigate: (screen: Screen, code?: string) => void;
 	roomCode: string;
+	playerCount: number;
 }
 
-export default function WaitingPage({ onNavigate, roomCode }: JoinPageProps) {
+export default function WaitingPage({ onNavigate, roomCode, playerCount }: JoinPageProps) {
 	const [selected, setSelected] = useState("waiting");
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
 
@@ -23,6 +24,11 @@ export default function WaitingPage({ onNavigate, roomCode }: JoinPageProps) {
 
 			<div className="pt-10">
 				<Header />
+			</div>
+
+			<div className="flex items-center gap-2 text-accent">
+				<span className="text-2xl">👥</span>
+				<span className="text-xl font-semibold">{playerCount} {playerCount === 1 ? 'player' : 'players'}</span>
 			</div>
 
 			<div className="text-center mt-6 text-2xl font-medium text-text px-4">
