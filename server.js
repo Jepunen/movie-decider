@@ -33,10 +33,10 @@ app.prepare().then(() => {
         });
 
         const channelName = `session:${sessionID}:updates`;
-        
+
         // Subscribe to the session's Redis channel
         await subscriber.subscribe(channelName);
-        
+
         socket.join(sessionID);
         console.log(`Client ${socket.id} joined session ${sessionID}`);
 
