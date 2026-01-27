@@ -11,17 +11,16 @@ interface HomePageProps {
 
 export default function HomePage({ onNavigate }: HomePageProps) {
 	return (
-		// min-h-[calc(100vh-2rem)] accounts for the p-4 padding in page.tsx
-		<div className="flex flex-col items-center justify-between min-h-[calc(100vh-2rem)] w-full">
-			<div className="mt-8">
+		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-6 pb-6">
+			<div className="pt-6">
 				<Header />
 			</div>
 
-			<div className="flex-1 flex items-center justify-center w-full">
+			<div className="flex-1 flex items-center justify-center w-full px-2">
 				<StatusImage status="default" />
 			</div>
 
-			<div className="flex flex-col gap-9 w-full mb-8">
+			<div className="flex flex-col gap-4 w-full mb-2 px-1">
 				<Button onClick={() => onNavigate("create")}>
 					Create Room
 				</Button>

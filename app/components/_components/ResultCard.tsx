@@ -23,16 +23,16 @@ const ResultCard: React.FC<ResultCardProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="flex w-full max-w-md h-48 rounded-lg shadow bg-secondary overflow-hidden">
-      <div className="flex items-center justify-center h-full pl-2 pr-2">
+    <div className="flex w-full max-w-2xl h-auto sm:h-48 rounded-lg shadow bg-secondary overflow-hidden flex-col sm:flex-row gap-2 sm:gap-0 p-2 sm:p-0">
+      <div className="flex items-center justify-center h-44 sm:h-full pl-2 sm:pl-2 pr-2 sm:pr-2">
         <ResultCardPoster posterPath={movie.poster_url} title={movie.title} />
       </div>
-      <div className="flex flex-col justify-between p-0.5">
+      <div className="flex flex-col justify-between flex-1 p-0.5 sm:p-0">
         <ResultCardDetails movie={movie} />
       </div>
-      <div className="flex flex-col items-center justify-between h-44 w-24 pt-6 pr-3 pl-1">
+      <div className="flex flex-row sm:flex-col items-center justify-between h-auto sm:h-44 w-full sm:w-24 gap-3 sm:gap-0 sm:pt-6 sm:pr-3 sm:pl-1">
         <ResultCardCompatibility compatibilityScore={compatibilityScore} />
-        <div>
+        <div className="w-full sm:w-auto">
           <Button onClick={() => setIsModalOpen(true)}>Info</Button>
         </div>
       </div>

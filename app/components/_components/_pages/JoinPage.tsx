@@ -14,19 +14,18 @@ export default function JoinPage({ onNavigate }: JoinPageProps) {
 	const [guestCode, setGuestCode] = useState("");
 
 	return (
-		// min-h-[calc(100vh-2rem)] accounts for the p-4 padding in page.tsx
-		<div className="flex flex-col items-center justify-between min-h-[calc(100vh-2rem)] w-full">
+		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-6 pb-6">
 			<BackButton onClick={() => onNavigate("home")} />
 
-			<div className="mt-8">
+			<div className="pt-10">
 				<Header />
 			</div>
 
-			<div className="flex-1 flex items-center justify-center w-full">
+			<div className="flex-1 flex items-center justify-center w-full px-2">
 				<StatusImage status="joining" />
 			</div>
 
-			<div className="flex flex-col items-center gap-2 w-full">
+			<div className="flex flex-col items-center gap-2 w-full px-2">
 				<h2 className="text-4xl text-text font-black text-center">
 					Room Code
 				</h2>
@@ -38,7 +37,7 @@ export default function JoinPage({ onNavigate }: JoinPageProps) {
 				/>
 			</div>
 
-			<div className="flex flex-col gap-9 w-full mt-12">
+			<div className="flex flex-col gap-6 w-full px-1">
 				<Button
 					onClick={() => {
 						onNavigate("waiting");

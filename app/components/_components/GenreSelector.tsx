@@ -28,7 +28,7 @@ export default function GenreSelector({
   };
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 4, columnGap: 8 }}>
       {genres.map((genre) => (
         <GenreButton
           key={genre.id}

@@ -13,7 +13,7 @@ export const MoviePoster: React.FC<MoviePosterProps> = ({
   priority,
 }) => {
 	return (
-		<div className="relative h-76 w-48 mb-2 shrink-0 self-center">
+		<div className="relative h-96 w-64 mb-2 shrink-0 self-center max-w-xs">
 			<Image
 				src={posterPath ?? "/movie_posters_DEV/the_martian.jpg"}
 				alt={title ?? "Movie Poster"}

@@ -29,7 +29,7 @@ const ResultCardReviews: React.FC<ResultCardReviewsProps> = ({
   MetacriticRating,
 }) => {
   return (
-    <div className="flex flex-row font-black text-text justify-start gap-1 w-full max-w-md">
+    <div className="flex flex-row font-black text-text justify-start gap-1 w-full flex-wrap">
       {IMDBRating && (
         <RatingItem src="/IMDb_logo.svg" alt="IMDB" rating={IMDBRating} />
       )}

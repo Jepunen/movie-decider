@@ -15,15 +15,14 @@ export default function WaitingPage({ onNavigate }: JoinPageProps) {
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
 
 	return (
-		// min-h-[calc(100vh-2rem)] accounts for the p-4 padding in page.tsx
-		<div className="flex flex-col items-center justify-between min-h-[calc(100vh-2rem)] w-full">
+		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-6 pb-6">
 			<BackButton onClick={() => onNavigate("join")} />
 
-			<div className="mt-8">
+			<div className="pt-10">
 				<Header />
 			</div>
 
-			<div className="text-center mt-24 text-2xl font-medium text-text">
+			<div className="text-center mt-6 text-2xl font-medium text-text px-4">
 				{selected === "waiting" && (
 					<p>Wait for host to start the game!</p>
 				)}
@@ -32,12 +31,12 @@ export default function WaitingPage({ onNavigate }: JoinPageProps) {
 				)}
 			</div>
 
-			<div className="flex-1 flex items-center justify-center w-full">
+			<div className="flex-1 flex items-center justify-center w-full px-2">
 				{selected === "waiting" && <StatusImage status="waiting" />}
 			</div>
 
 			{selected === "preferences" && (
-				<div className="flex flex-col items-center gap-2 w-full mt-2 mb-2">
+				<div className="flex flex-col items-center gap-2 w-full px-2">
 					<h3 className="text-2xl font-semibold text-text">
 						Select Genres
 					</h3>
@@ -48,7 +47,7 @@ export default function WaitingPage({ onNavigate }: JoinPageProps) {
 				</div>
 			)}
 
-			<div className="flex flex-col gap-9 w-full mt-8">
+			<div className="flex flex-col w-full px-1">
 				<PillButtonGroup
 					options={[
 						{ label: "Waiting Room", value: "waiting" },
@@ -56,6 +55,7 @@ export default function WaitingPage({ onNavigate }: JoinPageProps) {
 					]}
 					value={selected}
 					onChange={setSelected}
+					className="w-full justify-center"
 				/>
 			</div>
 		</div>
