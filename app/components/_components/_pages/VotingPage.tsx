@@ -9,46 +9,62 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Dispatch, SetStateAction } from "react";
 
 interface VotingPageProps {
-	movies: CustomMovie[] | undefined;
-	setResults: Dispatch<SetStateAction<Result[]>>;
-	onNavigate: (screen: Screen) => void;
+  movies: CustomMovie[] | undefined;
+  setResults: Dispatch<SetStateAction<Result[]>>;
+  onNavigate: (screen: Screen) => void;
+  roomCode: string; // Add this prop
 }
+
 export default function VotingPage({
-	movies,
-	setResults,
-	onNavigate,
+  movies,
+  setResults,
+  onNavigate,
+  roomCode, // Add this
 }: VotingPageProps) {
-	const [currentMovie, setCurrentMovie] = useState(0);
+  const [currentMovie, setCurrentMovie] = useState(0);
 
-	// preload next movie poster image
-	useEffect(() => {
-		if (!movies) return;
-		const next = movies[currentMovie + 1];
-		if (!next?.poster_url) return;
+  useEffect(() => {
+    if (!movies) return;
+    const next = movies[currentMovie + 1];
+    if (!next?.poster_url) return;
 
-		const img = new window.Image();
-		img.src = next.poster_url;
-	}, [currentMovie, movies]);
+    const img = new Image();
+    img.src = next.poster_url;
+  }, [currentMovie, movies]);
 
-	// TODO: Replace with actual API call
-	const sendVoteToAPI = async (movie: CustomMovie, rate: number) => {
-		// Placeholder function to simulate sending vote to an API
-		console.log(`Voted ${rate} for movie: ${movie.title}`);
-		setResults((prev) => [...prev, { movie: movie, compatibility: rate }]);
-	};
+  const sendVoteToAPI = async (movie: CustomMovie, rate: number) => {
+    try {
+      const response = await fetch("/api/score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionID: roomCode,
+          CustomMovie: movie,
+          score: rate.toString(),
+        }),
+      });
 
-	if (!movies) {
-		return <div>Loading movies...</div>;
-	}
+      if (response.ok) {
+        const data = await response.json();
+        console.log("✅ Vote submitted:", data);
+      }
+    } catch (error) {
+      console.error("❌ Error submitting vote:", error);
+    }
+  };
 
-	const handleVote = async (rate: number) => {
-		await sendVoteToAPI(movies[currentMovie], rate);
-		setCurrentMovie((prev) => prev + 1);
-	};
+  if (!movies) {
+    return <div>Loading movies...</div>;
+  }
 
-	const handleSkip = () => {
-		setCurrentMovie((prev) => prev + 1);
-	};
+  const handleVote = async (rate: number) => {
+    await sendVoteToAPI(movies[currentMovie], rate);
+    setCurrentMovie((prev) => prev + 1);
+  };
+
+  const handleSkip = () => {
+    setCurrentMovie((prev) => prev + 1);
+  };
 
 	if (currentMovie >= movies.length) {
 		return (
@@ -64,7 +80,7 @@ export default function VotingPage({
 		);
 	}
 
-	const movie = movies[currentMovie];
+  const movie = movies[currentMovie];
 
 	return (
 		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm mx-auto gap-5 pb-6 px-2">

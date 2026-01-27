@@ -1,32 +1,14 @@
-import React, { useEffect } from "react";
 import ResultCard from "../ResultCard";
-import { socket } from "../../../socket";
 import type { Result } from "@/types/movies";
 import Header from "../_ui/Header";
 
 interface ResultsPageProps {
-	results: Result[];
-	onResultsUpdate?: (results: Result[]) => void;
+  results: Result[];
 }
 
 export default function ResultsPage({
 	results,
-	onResultsUpdate,
 }: ResultsPageProps) {
-	useEffect(() => {
-		// Listen for real-time results updates
-		// TODO: Ensure socket wokrs correctly here
-		socket.on("results_update", (data: Result[]) => {
-			if (onResultsUpdate) {
-				onResultsUpdate(data);
-			}
-		});
-
-		return () => {
-			socket.off("results_update");
-		};
-	}, [onResultsUpdate]);
-
 	return (
 		<div className="relative flex flex-col w-full max-w-screen-sm mx-auto h-[calc(100dvh-2rem)] overflow-hidden items-center">
 			<div className="shrink-0 pt-6">

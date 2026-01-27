@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../_ui/Header";
 import StatusImage from "../StatusImage";
 import Button from "../Button";
@@ -10,6 +10,7 @@ import type { Screen } from "@/types/screen";
 import BackButton from "../BackButton";
 import GenreSelector from "../GenreSelector";
 import { useMovies } from "@/lib/movies";
+import { socket } from "@/app/socket";
 
 interface CreatePageProps {
 	onNavigate: (screen: Screen, code?: string) => void;
@@ -17,24 +18,32 @@ interface CreatePageProps {
 	roomCode: string;
 }
 
-export default function CreatePage({
-	onNavigate,
-	setMovies,
-	roomCode,
-}: CreatePageProps) {
+export default function CreatePage({ onNavigate, setMovies, roomCode }: CreatePageProps) {
 	const [selected, setSelected] = useState("create");
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
 	const [fetchEnabled, setFetchEnabled] = useState(false);
 
-	const {
-		data: movies,
-		isPending,
-		refetch,
-	} = useMovies({ with_genres: selectedGenres }, fetchEnabled);
+	const { data: movies, isPending, refetch } = useMovies({ with_genres: selectedGenres }, fetchEnabled);
+
+	useEffect(() => {
+		// Host also listens for updates (in case of reconnection, etc.)
+		const handleSessionUpdate = (data: any) => {
+			console.log("Session update received:", data);
+
+			if (data.sessionState === true) {
+				onNavigate("review");
+			}
+		};
+
+		socket.on("session-update", handleSessionUpdate);
+
+		return () => {
+			socket.off("session-update", handleSessionUpdate);
+		};
+	}, [onNavigate]);
 
 	const handleStartGame = async () => {
 		setFetchEnabled(true);
-
 		const res = await refetch();
 
 		if (!res.data) {
@@ -42,8 +51,23 @@ export default function CreatePage({
 			return;
 		}
 
-		setMovies(res.data);
-		onNavigate("review");
+		const movieData = res.data;
+		setMovies(movieData);
+
+		// Update session state in Redis - this will trigger WebSocket updates
+		const stateRes = await fetch("/api/start-game", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				sessionID: roomCode,
+				movies: movieData, // Send movies to be stored in Redis
+			}),
+		});
+
+		if (stateRes.ok) {
+			// Navigation will happen via socket update
+			onNavigate("review");
+		}
 	};
 
 	return (
@@ -59,21 +83,14 @@ export default function CreatePage({
 			</div>
 
 			{selected === "preferences" && (
-				<div className="flex flex-col items-center gap-2 w-full px-2">
-					<h3 className="text-2xl font-semibold text-text">
-						Select Genres
-					</h3>
-					<GenreSelector
-						onChange={setSelectedGenres}
-						selected={selectedGenres}
-					/>
+				<div className="flex flex-col items-center gap-2 w-full mt-2 mb-2">
+					<h3 className="text-2xl font-semibold text-text">Select Genres</h3>
+					<GenreSelector onChange={setSelectedGenres} selected={selectedGenres} />
 				</div>
 			)}
 
-			<div className="flex flex-col items-center gap-2 w-full mt-2 px-2">
-				<h2 className="text-4xl text-text font-black text-center">
-					Room Code
-				</h2>
+			<div className="flex flex-col items-center gap-2 w-full mt-2">
+				<h2 className="text-4xl text-text font-black text-center">Room Code</h2>
 				{/* TODO: Implement function to create the room code */}
 				<RoomCode isHost code={roomCode} />
 			</div>

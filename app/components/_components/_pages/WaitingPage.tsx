@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Header from "../_ui/Header";
 import StatusImage from "../StatusImage";
 import PillButtonGroup from "../PillButtonGroup";
@@ -8,11 +8,14 @@ import type { Screen } from "@/types/screen";
 
 interface JoinPageProps {
 	onNavigate: (screen: Screen, code?: string) => void;
+	roomCode: string;
 }
 
-export default function WaitingPage({ onNavigate }: JoinPageProps) {
+export default function WaitingPage({ onNavigate, roomCode }: JoinPageProps) {
 	const [selected, setSelected] = useState("waiting");
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
+
+	// Removed duplicate session-update listener - handled in page.tsx
 
 	return (
 		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-6 pb-6">

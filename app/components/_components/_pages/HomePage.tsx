@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 
 interface HomePageProps {
 	onNavigate: (screen: Screen, code?: string) => void;
+	onCreateRoom: () => Promise<void>;
 }
 
 const createRoom = async () => {
@@ -22,7 +23,7 @@ const createRoom = async () => {
 	return res.json();
 };
 
-export default function HomePage({ onNavigate }: HomePageProps) {
+export default function HomePage({ onNavigate, onCreateRoom }: HomePageProps) {
 	const createRoomMutation = useMutation({
 		mutationFn: createRoom,
 		onSuccess: (data) => {
@@ -46,7 +47,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
 			<div className="flex flex-col gap-4 w-full mb-2 px-1">
 				<Button
-					onClick={handleCreateRoom}
+					onClick={onCreateRoom}
 					disabled={createRoomMutation.isPending}
 				>
 					Create Room
