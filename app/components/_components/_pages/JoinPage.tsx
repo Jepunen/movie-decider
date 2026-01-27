@@ -5,13 +5,46 @@ import Button from "../Button";
 import RoomCode from "../RoomCode";
 import type { Screen } from "@/types/screen";
 import BackButton from "../BackButton";
+import { useMutation } from "@tanstack/react-query";
 
 interface JoinPageProps {
 	onNavigate: (screen: Screen, code?: string) => void;
 }
 
+const joinRoom = async (guestCode: string) => {
+	const res = await fetch("/api/session/join", {
+		method: "POST",
+		body: JSON.stringify({ sessionID: guestCode }),
+	});
+
+	return res.json();
+};
+
 export default function JoinPage({ onNavigate }: JoinPageProps) {
 	const [guestCode, setGuestCode] = useState("");
+
+	const joinRoomMutation = useMutation({
+		mutationFn: joinRoom,
+		onSuccess: (data) => {
+			console.log("Join room response data:", data);
+
+			if (data.sessionID === undefined) {
+				onNavigate("home");
+				return;
+			}
+
+			onNavigate("waiting", data.sessionID.toString());
+		},
+		onError: (error) => {
+			console.error("Error joining room:", error);
+			// Optionally, you can add user feedback here
+			onNavigate("home");
+		},
+	});
+
+	const handleJoinGame = async () => {
+		joinRoomMutation.mutate(guestCode);
+	};
 
 	return (
 		// min-h-[calc(100vh-2rem)] accounts for the p-4 padding in page.tsx
@@ -30,7 +63,6 @@ export default function JoinPage({ onNavigate }: JoinPageProps) {
 				<h2 className="text-4xl text-text font-black text-center">
 					Room Code
 				</h2>
-				{/* TODO: Implement function to create the room code */}
 				<RoomCode
 					isHost={false}
 					code={guestCode}
@@ -39,13 +71,7 @@ export default function JoinPage({ onNavigate }: JoinPageProps) {
 			</div>
 
 			<div className="flex flex-col gap-9 w-full mt-12">
-				<Button
-					onClick={() => {
-						onNavigate("waiting");
-					}}
-				>
-					Join Game
-				</Button>
+				<Button onClick={handleJoinGame}>Join Game</Button>
 			</div>
 		</div>
 	);
