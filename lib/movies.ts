@@ -53,7 +53,7 @@ export async function getMovies(
 	let outputMovies: CustomMovie[] = await Promise.all(
 		randomizedMovies.map((movie: Movie) =>
 			limit(async () => {
-				console.log("Fetching details for movie:", movie.title);
+				//console.log("Fetching details for movie:", movie.title);
 				const omdbDetails: OMDBMovie = await getOMDBetails(movie.id);
 
 				return {
@@ -119,7 +119,7 @@ function seededRandom(seed: number) {
 
 // https://api.themoviedb.org/3/movie/{movie_id}
 export async function getMovieDetails(movieId: number) {
-	console.log("Fetching movie details for ID:", movieId);
+	//console.log("Fetching movie details for ID:", movieId);
 	const url = new URL(process.env.TMDB_BASE_URL + "/movie/" + movieId);
 	const options = {
 		method: "GET",
@@ -141,9 +141,9 @@ export async function getMovieDetails(movieId: number) {
 
 // https://www.omdbapi.com/
 export async function getOMDBetails(tmdb_id: number) {
-	console.log("Fetching OMDB details for TMDB ID:", tmdb_id);
+	//console.log("Fetching OMDB details for TMDB ID:", tmdb_id);
 	const movieDetails = await getMovieDetails(tmdb_id);
-	console.log("Movie details fetched:", movieDetails);
+	//console.log("Movie details fetched:", movieDetails);
 	const url = new URL(
 		`https://www.omdbapi.com/?i=${movieDetails.imdb_id}&apikey=` +
 			process.env.OMDB_API_KEY,

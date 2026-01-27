@@ -11,76 +11,70 @@ const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
 
 app.prepare().then(() => {
-  const httpServer = createServer(handler);
+	const httpServer = createServer(handler);
 
-  const io = new Server(httpServer, {
-    cors: {
-      origin: process.env.NODE_ENV === "production" ? false : ["http://localhost:3000"],
-      methods: ["GET", "POST"]
-    }
-  });
+	const io = new Server(httpServer, {
+		cors: {
+			origin: process.env.NODE_ENV === "production" ? false : ["http://localhost:3000"],
+			methods: ["GET", "POST"],
+		},
+	});
 
-  io.on("connection", (socket) => {
-    console.log("Client connected:", socket.id);
+	io.on("connection", (socket) => {
+		console.log("✅ Client connected:", socket.id);
 
-    // Handle session join
-    socket.on("join-session", async (sessionID) => {
-      try {
-        // Create a Redis subscriber for this session
-        const subscriber = new Redis({
-          host: process.env.REDIS_HOST,
-          port: Number(process.env.REDIS_PORT),
-        });
+		socket.on("join-session", async (sessionID) => {
+			console.log(`🔵 JOIN-SESSION received from ${socket.id} for session ${sessionID}`);
+			try {
+				const subscriber = new Redis({
+					host: process.env.REDIS_HOST,
+					port: Number(process.env.REDIS_PORT),
+				});
 
-        const channelName = `session:${sessionID}:updates`;
+				const channelName = `session:${sessionID}:updates`;
 
-        // Subscribe to the session's Redis channel
-        await subscriber.subscribe(channelName);
+				await subscriber.subscribe(channelName);
+				socket.join(sessionID);
 
-        socket.join(sessionID);
-        console.log(`Client ${socket.id} joined session ${sessionID}`);
+				console.log(`✅ Client ${socket.id} successfully joined session ${sessionID}`);
 
-        // Listen for Redis messages and forward to the socket
-        subscriber.on("message", (channel, message) => {
-          if (channel === channelName) {
-            try {
-              const data = JSON.parse(message);
-              socket.emit("session-update", data);
-            } catch (err) {
-              console.error("Error parsing Redis message:", err);
-            }
-          }
-        });
+				subscriber.on("message", (channel, message) => {
+					if (channel === channelName) {
+						try {
+							const data = JSON.parse(message);
+							console.log(`📤 Sending update to ${socket.id}:`, data);
+							socket.emit("session-update", data);
+						} catch (err) {
+							console.error("❌ Error parsing Redis message:", err);
+						}
+					}
+				});
 
-        // Store subscriber reference for cleanup
-        socket.data.subscriber = subscriber;
-        socket.data.sessionID = sessionID;
+				socket.data.subscriber = subscriber;
+				socket.data.sessionID = sessionID;
 
-        // Send confirmation
-        socket.emit("joined-session", { sessionID });
-      } catch (error) {
-        console.error("Error joining session:", error);
-        socket.emit("error", { message: "Failed to join session" });
-      }
-    });
+				socket.emit("joined-session", { sessionID });
+			} catch (error) {
+				console.error("❌ Error joining session:", error);
+				socket.emit("error", { message: "Failed to join session" });
+			}
+		});
 
-    // Handle disconnect
-    socket.on("disconnect", () => {
-      console.log("Client disconnected:", socket.id);
-      
-      // Clean up Redis subscriber
-      if (socket.data.subscriber) {
-        socket.data.subscriber.disconnect();
-      }
-    });
-  });
+		socket.on("disconnect", () => {
+			console.log("❌ Client disconnected:", socket.id);
 
-  httpServer
-    .once("error", (err) => {
-      console.error(err);
-      process.exit(1);
-    })
-    .listen(port, () => {
-      console.log(`> Ready on http://${hostname}:${port}`);
-    });
+			if (socket.data.subscriber) {
+				socket.data.subscriber.disconnect();
+			}
+		});
+	});
+
+	httpServer
+		.once("error", (err) => {
+			console.error(err);
+			process.exit(1);
+		})
+		.listen(port, () => {
+			console.log(`> Ready on http://${hostname}:${port}`);
+		});
 });

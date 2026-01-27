@@ -12,11 +12,13 @@ export type redisMovieData = {
 
 
 // structure of data stored in redis
-export type redisData = { 
-  createdAt: string,
-  sessionState: boolean,
-  movies: Record<string, redisMovieData>
-}
+export type redisData = {
+  createdAt: string;
+  sessionState: boolean;
+  movies: Record<string, redisMovieData>;
+  currentMovies?: CustomMovie[];
+  results?: Result[]; // Add this
+};
 
 
 // provided by user request when updating movie preferences
