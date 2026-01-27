@@ -7,52 +7,50 @@ import { getRedis } from "@/redis/redis";
 import { redisData, redisMovieData } from "@/types/redisData";
 
 type ResponseData = {
-  sessionID: number;
-  message?: string;
-}
-
-
+	sessionID: number;
+	message?: string;
+};
 
 export async function POST(req: Request) {
-  try {
-    const redis = getRedis();
-    
-    // Ensure Redis is connected
-    if (redis.status !== "ready") {
-      await redis.connect();
-    }
-    
-    // Generate a unique session ID
-    const sessionID = randomInt(100000, 999999);
-    
-    // Initialize session in Redis with empty data
-    const seed: redisData = {
-      createdAt: new Date().toISOString(),
-      sessionState: false,
-      movies: {}
-    }
+	try {
+		const redis = getRedis();
 
-    await redis.set(
-      `session:${sessionID}`,
-      JSON.stringify(seed),
-      // Set expiration to 1h (3600 seconds)
-      "EX",
-      3600
-    );
+		// Ensure Redis is connected
+		if (redis.status !== "ready") {
+			await redis.connect();
+		}
 
-    const response: ResponseData = {
-      message: "Session created successfully",
-      sessionID
-    };
+		// Generate a unique session ID
+		const sessionID = randomInt(100000, 999999);
 
-    return Response.json(response, { status: 201 });
-  } catch (error) {
-    console.log(error)
-    return Response.json(
-      { 
-        message: "Failed to create session" 
-      },
-      { status: 500 }
-    );
-  }
+		// Initialize session in Redis with empty data
+		const seed: redisData = {
+			createdAt: new Date().toISOString(),
+			sessionState: false,
+			movies: {},
+		};
+
+		await redis.set(
+			`session:${sessionID}`,
+			JSON.stringify(seed),
+			// Set expiration to 1h (3600 seconds)
+			"EX",
+			3600,
+		);
+
+		const response: ResponseData = {
+			message: "Session created successfully",
+			sessionID,
+		};
+
+		return Response.json(response, { status: 201 });
+	} catch (error) {
+		////console.log(error)
+		return Response.json(
+			{
+				message: "Failed to create session",
+			},
+			{ status: 500 },
+		);
+	}
 }

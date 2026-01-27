@@ -1,4 +1,5 @@
 import { CustomMovie } from "./movies"
+import { Result } from "./movies";
 
 // Type for data on individual movies stored in redis sessions. Data is stored in redis as a map where structure is as follows:
 // <K: movieID[string], V: score[number], count[number]

@@ -18,17 +18,25 @@ interface CreatePageProps {
 	roomCode: string;
 }
 
-export default function CreatePage({ onNavigate, setMovies, roomCode }: CreatePageProps) {
+export default function CreatePage({
+	onNavigate,
+	setMovies,
+	roomCode,
+}: CreatePageProps) {
 	const [selected, setSelected] = useState("create");
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
 	const [fetchEnabled, setFetchEnabled] = useState(false);
 
-	const { data: movies, isPending, refetch } = useMovies({ with_genres: selectedGenres }, fetchEnabled);
+	const {
+		data: movies,
+		isPending,
+		refetch,
+	} = useMovies({ with_genres: selectedGenres }, fetchEnabled);
 
 	useEffect(() => {
 		// Host also listens for updates (in case of reconnection, etc.)
 		const handleSessionUpdate = (data: any) => {
-			console.log("Session update received:", data);
+			//console.log("Session update received:", data);
 
 			if (data.sessionState === true) {
 				onNavigate("review");
@@ -84,13 +92,20 @@ export default function CreatePage({ onNavigate, setMovies, roomCode }: CreatePa
 
 			{selected === "preferences" && (
 				<div className="flex flex-col items-center gap-2 w-full mt-2 mb-2">
-					<h3 className="text-2xl font-semibold text-text">Select Genres</h3>
-					<GenreSelector onChange={setSelectedGenres} selected={selectedGenres} />
+					<h3 className="text-2xl font-semibold text-text">
+						Select Genres
+					</h3>
+					<GenreSelector
+						onChange={setSelectedGenres}
+						selected={selectedGenres}
+					/>
 				</div>
 			)}
 
 			<div className="flex flex-col items-center gap-2 w-full mt-2">
-				<h2 className="text-4xl text-text font-black text-center">Room Code</h2>
+				<h2 className="text-4xl text-text font-black text-center">
+					Room Code
+				</h2>
 				{/* TODO: Implement function to create the room code */}
 				<RoomCode isHost code={roomCode} />
 			</div>

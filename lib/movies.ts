@@ -1,8 +1,8 @@
 import {
-  DiscoverMovieParams,
-  Movie,
-  OMDBMovie,
-  CustomMovie,
+	DiscoverMovieParams,
+	Movie,
+	OMDBMovie,
+	CustomMovie,
 } from "@/types/movies";
 import { useQuery } from "@tanstack/react-query";
 import pLimit from "p-limit";
@@ -13,7 +13,7 @@ const CACHE_LENGTH = 86400; // 24 hours
 export async function getMovies(
 	params: DiscoverMovieParams = {},
 ): Promise<CustomMovie[]> {
-	console.log("getMovies called with params:", params);
+	//console.log("getMovies called with params:", params);
 	const url = new URL(process.env.TMDB_BASE_URL + "/discover/movie");
 	const options = {
 		method: "GET",
@@ -40,7 +40,7 @@ export async function getMovies(
 		.then((res) => res.json())
 		.catch((err) => console.error(err));
 
-	//console.log(tmdbDiscoveryMovies);
+	////console.log(tmdbDiscoveryMovies);
 
 	// Take 10 random movies from the results
 	const randomizedMovies = getRandomMovies(
@@ -53,7 +53,7 @@ export async function getMovies(
 	let outputMovies: CustomMovie[] = await Promise.all(
 		randomizedMovies.map((movie: Movie) =>
 			limit(async () => {
-				//console.log("Fetching details for movie:", movie.title);
+				////console.log("Fetching details for movie:", movie.title);
 				const omdbDetails: OMDBMovie = await getOMDBetails(movie.id);
 
 				return {
@@ -75,7 +75,7 @@ export async function getMovies(
 		),
 	);
 
-	// console.log(outputMovies);
+	//////console.log(outputMovies);
 
 	return outputMovies;
 }
@@ -89,37 +89,37 @@ function getRandomMovies(
 		return movies;
 	}
 
-  const shuffled = shuffleWithSeed(movies, seed);
-  return shuffled.slice(0, count);
+	const shuffled = shuffleWithSeed(movies, seed);
+	return shuffled.slice(0, count);
 }
 
 function shuffleWithSeed<T>(array: T[], seed: number): T[] {
-  const result = [...array];
-  let currentIndex = result.length;
+	const result = [...array];
+	let currentIndex = result.length;
 
-  while (currentIndex !== 0) {
-    const randomIndex = Math.floor(seededRandom(seed) * currentIndex);
-    seed++;
+	while (currentIndex !== 0) {
+		const randomIndex = Math.floor(seededRandom(seed) * currentIndex);
+		seed++;
 
-    currentIndex--;
+		currentIndex--;
 
-    [result[currentIndex], result[randomIndex]] = [
-      result[randomIndex],
-      result[currentIndex],
-    ];
-  }
+		[result[currentIndex], result[randomIndex]] = [
+			result[randomIndex],
+			result[currentIndex],
+		];
+	}
 
-  return result;
+	return result;
 }
 
 function seededRandom(seed: number) {
-  let x = Math.sin(seed) * 10000;
-  return x - Math.floor(x);
+	let x = Math.sin(seed) * 10000;
+	return x - Math.floor(x);
 }
 
 // https://api.themoviedb.org/3/movie/{movie_id}
 export async function getMovieDetails(movieId: number) {
-	//console.log("Fetching movie details for ID:", movieId);
+	////console.log("Fetching movie details for ID:", movieId);
 	const url = new URL(process.env.TMDB_BASE_URL + "/movie/" + movieId);
 	const options = {
 		method: "GET",
@@ -141,9 +141,9 @@ export async function getMovieDetails(movieId: number) {
 
 // https://www.omdbapi.com/
 export async function getOMDBetails(tmdb_id: number) {
-	//console.log("Fetching OMDB details for TMDB ID:", tmdb_id);
+	////console.log("Fetching OMDB details for TMDB ID:", tmdb_id);
 	const movieDetails = await getMovieDetails(tmdb_id);
-	//console.log("Movie details fetched:", movieDetails);
+	////console.log("Movie details fetched:", movieDetails);
 	const url = new URL(
 		`https://www.omdbapi.com/?i=${movieDetails.imdb_id}&apikey=` +
 			process.env.OMDB_API_KEY,

@@ -31,32 +31,35 @@ export default function Home() {
 		socket.connect();
 
 		socket.on("connect", () => {
-			console.log("✅ Socket connected:", socket.id);
+			//console.log("✅ Socket connected:", socket.id);
 		});
 
 		socket.on("joined-session", (data) => {
-			console.log("✅ Successfully joined session:", data);
+			//console.log("✅ Successfully joined session:", data);
 		});
 
 		socket.on("session-update", (data) => {
-			console.log("🔔 Session update received:", data);
-			console.log("📍 Current screen:", currentScreenRef.current);
+			//console.log("🔔 Session update received:", data);
+			//console.log("📍 Current screen:", currentScreenRef.current);
 
 			// Handle game start - only navigate if we're still in create/waiting screens
 			if (data.sessionState === true && data.currentMovies) {
-				console.log("📽️ Received movies:", data.currentMovies.length);
+				//console.log("📽️ Received movies:", data.currentMovies.length);
 				setMovies(data.currentMovies);
 
 				// Use ref to get current screen value without closure issues
-				if (currentScreenRef.current === "create" || currentScreenRef.current === "waiting") {
-					console.log("🎮 Starting game, navigating to review");
+				if (
+					currentScreenRef.current === "create" ||
+					currentScreenRef.current === "waiting"
+				) {
+					//console.log("🎮 Starting game, navigating to review");
 					setCurrentScreen("review");
 				}
 			}
 
 			// Handle results updates (real-time voting)
 			if (data.results) {
-				console.log("📊 Updated results received:", data.results.length);
+				//console.log("📊 Updated results received:", data.results.length);
 				setResults(data.results);
 			}
 		});
@@ -76,14 +79,14 @@ export default function Home() {
 
 	// Helper to emit join-session with connection check
 	const joinSocketSession = (sessionID: string) => {
-		console.log("🔵 Attempting to join session:", sessionID, "Socket connected:", socket.connected);
+		//console.log("🔵 Attempting to join session:", sessionID, "Socket connected:", socket.connected);
 
 		if (socket.connected) {
 			socket.emit("join-session", sessionID);
 		} else {
 			// Wait for connection, then emit
 			socket.once("connect", () => {
-				console.log("🔵 Socket connected, now joining session:", sessionID);
+				//console.log("🔵 Socket connected, now joining session:", sessionID);
 				socket.emit("join-session", sessionID);
 			});
 		}
@@ -124,21 +127,42 @@ export default function Home() {
 		<RemoveScroll>
 			<div className="relative min-h-dvh bg-primary px-4 py-4">
 				<div className="mx-auto w-full max-w-screen-sm">
-					{currentScreen === "home" && <HomePage onNavigate={handleNavigate} onCreateRoom={handleCreateRoom} />}
-					{currentScreen === "join" && <JoinPage onNavigate={handleNavigate} onJoinRoom={handleJoinRoom} />}
+					{currentScreen === "home" && (
+						<HomePage
+							onNavigate={handleNavigate}
+							onCreateRoom={handleCreateRoom}
+						/>
+					)}
+					{currentScreen === "join" && (
+						<JoinPage
+							onNavigate={handleNavigate}
+							onJoinRoom={handleJoinRoom}
+						/>
+					)}
 					{currentScreen === "create" && (
-					<CreatePage onNavigate={handleNavigate} setMovies={setMovies} roomCode={roomCode} />
-				)}
-					{currentScreen === "waiting" && <WaitingPage onNavigate={handleNavigate} roomCode={roomCode} />}
+						<CreatePage
+							onNavigate={handleNavigate}
+							setMovies={setMovies}
+							roomCode={roomCode}
+						/>
+					)}
+					{currentScreen === "waiting" && (
+						<WaitingPage
+							onNavigate={handleNavigate}
+							roomCode={roomCode}
+						/>
+					)}
 					{currentScreen === "review" && (
-					<VotingPage
-						movies={movies ?? []}
-						setResults={setResults}
-						onNavigate={handleNavigate}
-						roomCode={roomCode}
-					/>
-				)}
-					{currentScreen === "results" && <ResultsPage results={results} />}
+						<VotingPage
+							movies={movies ?? []}
+							setResults={setResults}
+							onNavigate={handleNavigate}
+							roomCode={roomCode}
+						/>
+					)}
+					{currentScreen === "results" && (
+						<ResultsPage results={results} />
+					)}
 				</div>
 			</div>
 		</RemoveScroll>
