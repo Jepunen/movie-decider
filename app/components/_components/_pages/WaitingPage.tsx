@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Header from "../_ui/Header";
 import StatusImage from "../StatusImage";
 import PillButtonGroup from "../PillButtonGroup";
 import BackButton from "../BackButton";
 import GenreSelector from "../GenreSelector";
 import type { Screen } from "@/types/screen";
+import { socket } from "@/app/socket";
 
 interface JoinPageProps {
 	onNavigate: (screen: Screen, code?: string) => void;
@@ -13,6 +14,11 @@ interface JoinPageProps {
 export default function WaitingPage({ onNavigate }: JoinPageProps) {
 	const [selected, setSelected] = useState("waiting");
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
+
+	socket.on("state-changed", (socket) => {
+		console.log('Socket: ' + socket);
+		onNavigate("review");
+	});
 
 	return (
 		// min-h-[calc(100vh-2rem)] accounts for the p-4 padding in page.tsx

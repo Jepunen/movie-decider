@@ -26,11 +26,10 @@ export default function CreatePage({
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
 	const [fetchEnabled, setFetchEnabled] = useState(false);
 
-	const {
-		data: movies,
-		isPending,
-		refetch,
-	} = useMovies({ with_genres: selectedGenres }, fetchEnabled);
+	const { data: movies, refetch } = useMovies(
+		{ with_genres: selectedGenres },
+		fetchEnabled,
+	);
 
 	const handleStartGame = async () => {
 		setFetchEnabled(true);
@@ -41,6 +40,10 @@ export default function CreatePage({
 			// handle error
 			return;
 		}
+
+		const roomState = await fetch(
+			`/api/session/updateState?roomCode=${roomCode}`,
+		);
 
 		setMovies(res.data);
 		onNavigate("review");
