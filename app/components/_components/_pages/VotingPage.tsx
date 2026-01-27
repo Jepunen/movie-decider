@@ -74,6 +74,7 @@ export default function VotingPage({
 			<div className="flex flex-col items-center gap-4">
 				<AnimatePresence mode="wait">
 					<motion.div
+						key={movie.imdb_id || movie.title}
 						initial={{ x: 300, opacity: 0 }}
 						animate={{ x: 0, opacity: 1 }}
 						exit={{ x: -300, opacity: 0 }}

@@ -12,16 +12,17 @@ export const ResultCardDetails: React.FC<ResultDetailsProps> = ({ movie }) => {
     ? new Date(movie.release_date).getFullYear()
     : "Unknown";
 
+  // Show up to 3 genres, mapped to their names
   const genres = movie.genres?.length
-    ? movie.genres.map((genre) => genreMap[genre] || genre).join(", ")
+    ? movie.genres.slice(0, 3).map((genre) => genreMap[genre] || genre).join(", ")
     : "N/A";
 
   return (
     <div className="flex flex-col justify-center h-full space-y-1">
-      <h2 className="font-bold text-xl">{movie.title}</h2>
+      <h2 className="font-bold text-lg">{movie.title}</h2>
       <div className="flex flex-row gap-3">
-        <p className="text-md">{releaseYear}</p>
-        <p className="text-md">{movie.runtime}min</p>
+        <p className="text-sm">{releaseYear}</p>
+        <p className="text-sm">{movie.runtime}</p>
       </div>
       <p className="text-sm">{genres}</p>
       <ResultCardReviews
