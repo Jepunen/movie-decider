@@ -67,11 +67,11 @@ export default function VotingPage({
 	const movie = movies[currentMovie];
 
 	return (
-		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm mx-auto gap-5 pb-6">
+		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm mx-auto gap-5 pb-6 px-2">
 			<div className="pt-10">
 				<Header />
 			</div>
-			<div className="flex flex-col items-center gap-4 flex-1 w-full px-2">
+			<div className="flex flex-col gap-4 flex-1">
 				<AnimatePresence mode="wait">
 					<motion.div
 						key={movie.imdb_id || movie.title}
@@ -79,7 +79,7 @@ export default function VotingPage({
 						animate={{ x: 0, opacity: 1 }}
 						exit={{ x: -300, opacity: 0 }}
 						transition={{ duration: 0.2 }}
-						className="w-full flex flex-col items-center"
+						className="flex justify-center"
 					>
 						<MovieCard movie={movie} />
 					</motion.div>

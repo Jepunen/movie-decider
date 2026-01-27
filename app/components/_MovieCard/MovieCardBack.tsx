@@ -12,7 +12,7 @@ export const MovieCardBack: React.FC<MovieCardBackProps> = ({
 }) => {
   return (
     <div
-      className="p-4 rounded-xl shadow w-80 sm:w-sm bg-secondary front max-h-[80vh] flex flex-col overflow-y-auto"
+      className="p-4 rounded-xl shadow w-80 h-[480px] bg-secondary front flex flex-col overflow-y-auto"
       onClick={onClick}
     >
       <h3 className="text-2xl font-bold mb-2">
