@@ -4,7 +4,7 @@
 
 import { hash, randomInt } from "crypto";
 import { getRedis } from "@/redis/redis";
-import { redisData, redisScoreType } from "@/types/requestData";
+import { redisData, redisMovieData } from "@/types/redisData";
 
 type ResponseData = {
   sessionID: number;

@@ -1,4 +1,4 @@
-import { redisData } from "@/types/requestData";
+import { redisData } from "@/types/redisData";
 import { ok } from "assert";
 import Redis from "ioredis";
 import { json } from "stream/consumers";
