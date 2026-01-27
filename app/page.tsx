@@ -1,8 +1,6 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useEffect } from "react";
-import { socket } from "./socket";
 import HomePage from "./components/_components/_pages/HomePage";
 import CreatePage from "./components/_components/_pages/CreatePage";
 import { RemoveScroll } from "react-remove-scroll";
@@ -15,13 +13,11 @@ import { CustomMovie, Result } from "@/types/movies";
 type Screen = "home" | "create" | "join" | "waiting" | "review" | "results";
 
 export default function Home() {
-	const [isConnected, setIsConnected] = useState<boolean>(false);
-	const [transport, setTransport] = useState<string>("N/A");
 	const [currentScreen, setCurrentScreen] = useState<Screen>("home");
 	const [roomCode, setRoomCode] = useState<string>("");
 
 	const [movies, setMovies] = useState<CustomMovie[]>([]);
-  const [results, setResults] = useState<Result[]>([]);
+	const [results, setResults] = useState<Result[]>([]);
 
 	// TODO: Implement movie fetching and passing to VotingPage after user starts the game from hosts CreatePage
 	// TODO: Implement results fetching and passing to ResultsPage after voting is complete
@@ -30,39 +26,6 @@ export default function Home() {
 		setCurrentScreen(screen);
 		if (code) setRoomCode(code);
 	};
-
-	// Handle websocket connection via socket.io
-	useEffect(() => {
-		if (socket.connected) {
-			onConnect();
-		}
-
-		function onConnect() {
-			setIsConnected(true);
-			setTransport(socket.io.engine.transport.name);
-
-			socket.io.engine.on("upgrade", (transport) => {
-				setTransport(transport.name);
-			});
-		}
-
-		function onDisconnect() {
-			setIsConnected(false);
-			setTransport("N/A");
-		}
-
-		socket.on("connect", onConnect);
-		socket.on("disconnect", onDisconnect);
-
-		return () => {
-			socket.off("connect", onConnect);
-			socket.off("disconnect", onDisconnect);
-		};
-	}, []);
-
-	const mockResults = [
-    { movie: "Movie A", compatibility: 5 }
-  ];
 
 	return (
 		<RemoveScroll>
@@ -78,7 +41,8 @@ export default function Home() {
 						<CreatePage
 							onNavigate={handleNavigate}
 							setMovies={setMovies}
-						/>
+							roomCode={roomCode}
+					/>
 					)}
 					{currentScreen === "waiting" && (
 						<WaitingPage onNavigate={handleNavigate} />
@@ -86,7 +50,7 @@ export default function Home() {
 					{currentScreen === "review" && (
 						<VotingPage
 							movies={movies ?? []}
-            setResults={setResults}
+							setResults={setResults}
 							onNavigate={handleNavigate}
 						/>
 					)}

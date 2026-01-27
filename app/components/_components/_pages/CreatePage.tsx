@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import Header from "../_ui/Header";
 import StatusImage from "../StatusImage";
@@ -12,17 +14,23 @@ import { useMovies } from "@/lib/movies";
 interface CreatePageProps {
 	onNavigate: (screen: Screen, code?: string) => void;
 	setMovies: (movies: any[]) => void;
+	roomCode: string;
 }
 
-export default function CreatePage({ onNavigate, setMovies }: CreatePageProps) {
+export default function CreatePage({
+	onNavigate,
+	setMovies,
+	roomCode,
+}: CreatePageProps) {
 	const [selected, setSelected] = useState("create");
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
 	const [fetchEnabled, setFetchEnabled] = useState(false);
 
-	const { data: movies, refetch } = useMovies(
-		{ with_genres: selectedGenres },
-		fetchEnabled,
-	);
+	const {
+		data: movies,
+		isPending,
+		refetch,
+	} = useMovies({ with_genres: selectedGenres }, fetchEnabled);
 
 	const handleStartGame = async () => {
 		setFetchEnabled(true);
@@ -67,7 +75,7 @@ export default function CreatePage({ onNavigate, setMovies }: CreatePageProps) {
 					Room Code
 				</h2>
 				{/* TODO: Implement function to create the room code */}
-				<RoomCode isHost code="123456" />
+				<RoomCode isHost code={roomCode} />
 			</div>
 
 			<div className="flex flex-col gap-6 w-full px-1">
