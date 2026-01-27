@@ -30,9 +30,9 @@ const ResultCard: React.FC<ResultCardProps> = ({
       <div className="flex flex-col flex-1">
         <ResultCardDetails movie={movie} />
       </div>
-      <div className="flex flex-row sm:flex-col items-center justify-between h-auto sm:h-44 w-full sm:w-24 gap-3 sm:gap-0 sm:pt-6 sm:pr-3 sm:pl-1">
+      <div className="flex flex-col items-center justify-between h-44 w-24 pt-6 pr-3 pl-1">
         <ResultCardCompatibility compatibilityScore={compatibilityScore} />
-        <div className="w-full sm:w-auto">
+        <div>
           <Button onClick={() => setIsModalOpen(true)}>Info</Button>
         </div>
       </div>

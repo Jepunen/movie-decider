@@ -22,7 +22,7 @@ export const ResultCardDetails: React.FC<ResultDetailsProps> = ({ movie }) => {
       <h2 className="font-bold text-xl">{movie.title}</h2>
       <div className="flex flex-row gap-3">
         <p className="text-md">{releaseYear}</p>
-        <p className="text-md">{movie.runtime}min</p>
+        <p className="text-md">{movie.runtime}</p>
       </div>
       <p className="text-xs sm:text-sm line-clamp-2">{genres}</p>
       <ResultCardReviews
