@@ -29,33 +29,35 @@ export default function Home() {
 
 	return (
 		<RemoveScroll>
-			<div className="relative min-h-screen bg-primary p-4">
-				{currentScreen === "home" && (
-					<HomePage onNavigate={handleNavigate} />
-				)}
-				{currentScreen === "join" && (
-					<JoinPage onNavigate={handleNavigate} />
-				)}
-				{currentScreen === "create" && (
-					<CreatePage
-						onNavigate={handleNavigate}
-						setMovies={setMovies}
-						roomCode={roomCode}
+			<div className="relative min-h-dvh bg-primary px-4 py-4">
+				<div className="mx-auto w-full max-w-screen-sm">
+					{currentScreen === "home" && (
+						<HomePage onNavigate={handleNavigate} />
+					)}
+					{currentScreen === "join" && (
+						<JoinPage onNavigate={handleNavigate} />
+					)}
+					{currentScreen === "create" && (
+						<CreatePage
+							onNavigate={handleNavigate}
+							setMovies={setMovies}
+							roomCode={roomCode}
 					/>
-				)}
-				{currentScreen === "waiting" && (
-					<WaitingPage onNavigate={handleNavigate} />
-				)}
-				{currentScreen === "review" && (
-					<VotingPage
-						movies={movies ?? []}
-						setResults={setResults}
-						onNavigate={handleNavigate}
-					/>
-				)}
-				{currentScreen === "results" && (
-					<ResultsPage results={results} />
-				)}
+					)}
+					{currentScreen === "waiting" && (
+						<WaitingPage onNavigate={handleNavigate} />
+					)}
+					{currentScreen === "review" && (
+						<VotingPage
+							movies={movies ?? []}
+							setResults={setResults}
+							onNavigate={handleNavigate}
+						/>
+					)}
+					{currentScreen === "results" && (
+						<ResultsPage results={results} />
+					)}
+				</div>
 			</div>
 		</RemoveScroll>
 	);

@@ -47,20 +47,19 @@ export default function CreatePage({
 	};
 
 	return (
-		// min-h-[calc(100vh-2rem)] accounts for the p-4 padding in page.tsx
-		<div className="flex flex-col items-center justify-between min-h-[calc(100vh-2rem)] w-full">
+		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-5 pb-6">
 			<BackButton onClick={() => onNavigate("home")} />
 
-			<div className="mt-8">
+			<div className="pt-10">
 				<Header />
 			</div>
 
-			<div className="flex-1 flex items-center justify-center w-full">
+			<div className="flex-1 flex items-center justify-center w-full px-2">
 				{selected !== "preferences" && <StatusImage status="hosting" />}
 			</div>
 
 			{selected === "preferences" && (
-				<div className="flex flex-col items-center gap-2 w-full mt-2 mb-2">
+				<div className="flex flex-col items-center gap-2 w-full px-2">
 					<h3 className="text-2xl font-semibold text-text">
 						Select Genres
 					</h3>
@@ -71,7 +70,7 @@ export default function CreatePage({
 				</div>
 			)}
 
-			<div className="flex flex-col items-center gap-2 w-full mt-2">
+			<div className="flex flex-col items-center gap-2 w-full mt-2 px-2">
 				<h2 className="text-4xl text-text font-black text-center">
 					Room Code
 				</h2>
@@ -79,11 +78,11 @@ export default function CreatePage({
 				<RoomCode isHost code={roomCode} />
 			</div>
 
-			<div className="flex flex-col gap-9 w-full mt-12">
+			<div className="flex flex-col gap-6 w-full px-1">
 				<Button onClick={handleStartGame}>Start Game</Button>
 			</div>
 
-			<div className="flex flex-col gap-9 w-full mt-8">
+			<div className="flex flex-col w-full px-1">
 				<PillButtonGroup
 					options={[
 						{ label: "Create", value: "create" },
@@ -91,6 +90,7 @@ export default function CreatePage({
 					]}
 					value={selected}
 					onChange={setSelected}
+					className="w-full justify-center"
 				/>
 			</div>
 		</div>
