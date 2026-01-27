@@ -15,7 +15,7 @@ interface RatingItemProps {
 
 const RatingItem: React.FC<RatingItemProps> = ({ src, alt, rating }) => (
   <div className="flex flex-row items-center gap-1">
-    <Image src={src} alt={alt} width={24} height={24} />
+    <Image src={src} alt={alt} width={20} height={20} />
     <p>{rating}</p>
   </div>
 );
@@ -26,7 +26,7 @@ const Reviews: React.FC<ReviewsProps> = ({
   MetacriticRating,
 }) => {
   return (
-    <div className="flex flex-row text-2xl font-black text-text justify-between w-full max-w-md">
+    <div className="flex flex-row text-xl font-black text-text justify-between w-full max-w-md">
       {IMDBRating && (
         <RatingItem src="/IMDb_logo.svg" alt="IMDB" rating={IMDBRating} />
       )}

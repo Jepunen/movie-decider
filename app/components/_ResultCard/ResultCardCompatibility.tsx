@@ -17,7 +17,7 @@ export const ResultCardCompatibility: React.FC<
   ResultCardCompatibilityProps
 > = ({ compatibilityScore }) => (
   <div className="flex flex-col items-center">
-    <span className={`text-4xl font-bold ${getColor(compatibilityScore)}`}>
+    <span className={`text-3xl font-bold ${getColor(compatibilityScore)}`}>
       {compatibilityScore !== undefined ? `${compatibilityScore}%` : "--"}
     </span>
     <span className="text-xs text-gray-200">Compatibility</span>

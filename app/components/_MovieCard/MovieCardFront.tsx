@@ -20,7 +20,7 @@ export const MovieCardFront: React.FC<MovieCardFrontProps> = ({
     >
       <MoviePoster posterPath={movie.poster_url} title={movie.title} priority />
       <MovieDetails movie={movie} />
-      <div className="ms-6 me-6">
+      <div className="ms-4 me-4">
         <Reviews
           IMDBRating={
             movie.ratings?.find((r) => r.Source === "Internet Movie Database")

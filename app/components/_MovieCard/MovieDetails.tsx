@@ -17,12 +17,12 @@ export const MovieDetails: React.FC<MovieDetailsProps> = ({ movie }) => {
 
   return (
     <div className="text-center">
-      <h2 className="text-2xl font-bold mb-1">
+      <h2 className="text-xl font-bold mb-1">
         {movie.title ?? "Unknown Title"}
       </h2>
       <div className="flex flex-row gap-2 justify-center mb-1">
         <p className="text-lg">{releaseYear}</p>
-        <p className="text-lg">{movie.runtime}min</p>
+        <p className="text-lg">{movie.runtime}</p>
       </div>
       <p className="text-md text-text mb-1">{genres}</p>
     </div>
