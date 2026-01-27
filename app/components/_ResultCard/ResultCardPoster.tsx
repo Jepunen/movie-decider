@@ -11,7 +11,7 @@ export const ResultCardPoster: React.FC<ResultCardPosterProps> = ({
   title,
 }) => {
   return (
-    <div className="relative w-28 h-44">
+    <div className="relative w-28 h-44 shrink-0 max-w-xs">
       {/* TODO: Instead of a static fallback image, implement a dynamic placeholder generation system  to not give wrong information to user */}
       <Image
         src={posterPath ?? "/movie_posters_DEV/the_martian.jpg"}

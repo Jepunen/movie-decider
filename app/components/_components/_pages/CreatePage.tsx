@@ -71,15 +71,14 @@ export default function CreatePage({ onNavigate, setMovies, roomCode }: CreatePa
 	};
 
 	return (
-		// min-h-[calc(100vh-2rem)] accounts for the p-4 padding in page.tsx
-		<div className="flex flex-col items-center justify-between min-h-[calc(100vh-2rem)] w-full">
+		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-5 pb-6">
 			<BackButton onClick={() => onNavigate("home")} />
 
-			<div className="mt-8">
+			<div className="pt-10">
 				<Header />
 			</div>
 
-			<div className="flex-1 flex items-center justify-center w-full">
+			<div className="flex-1 flex items-center justify-center w-full px-2">
 				{selected !== "preferences" && <StatusImage status="hosting" />}
 			</div>
 
@@ -96,11 +95,11 @@ export default function CreatePage({ onNavigate, setMovies, roomCode }: CreatePa
 				<RoomCode isHost code={roomCode} />
 			</div>
 
-			<div className="flex flex-col gap-9 w-full mt-12">
+			<div className="flex flex-col gap-6 w-full px-1">
 				<Button onClick={handleStartGame}>Start Game</Button>
 			</div>
 
-			<div className="flex flex-col gap-9 w-full mt-8">
+			<div className="flex flex-col w-full px-1">
 				<PillButtonGroup
 					options={[
 						{ label: "Create", value: "create" },
@@ -108,6 +107,7 @@ export default function CreatePage({ onNavigate, setMovies, roomCode }: CreatePa
 					]}
 					value={selected}
 					onChange={setSelected}
+					className="w-full justify-center"
 				/>
 			</div>
 		</div>

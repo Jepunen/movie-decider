@@ -14,7 +14,7 @@ const GenreButton = forwardRef<HTMLButtonElement, GenreButtonProps>(
         ref={ref}
         type="button"
         className={`
-        px-4 py-2 rounded-full flex-none border-6 font-semibold text-sm transition-colors duration-200
+        px-2.5 py-1 sm:px-3.5 sm:py-1.5 md:px-4 md:py-2 lg:px-6 lg:py-3 rounded-full flex-none border-2 sm:border-2 md:border-3 lg:border-6 font-semibold text-xs sm:text-sm md:text-sm lg:text-base transition-colors duration-200
         ${
           selected
             ? "bg-primary border-accent text-text"

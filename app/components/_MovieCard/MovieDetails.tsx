@@ -12,7 +12,7 @@ export const MovieDetails: React.FC<MovieDetailsProps> = ({ movie }) => {
     : "Unknown";
 
   const genres = movie.genres?.length
-    ? movie.genres.map((genre) => genreMap[genre] || genre).join(", ")
+    ? movie.genres.slice(0, 3).map((genre) => genreMap[genre] || genre).join(", ")
     : "N/A";
 
   return (
@@ -20,7 +20,7 @@ export const MovieDetails: React.FC<MovieDetailsProps> = ({ movie }) => {
       <h2 className="text-xl font-bold mb-1">
         {movie.title ?? "Unknown Title"}
       </h2>
-      <div className="flex flex-row gap-2 justify-center mb-1">
+      <div className="flex flex-row gap-6 justify-center mb-1">
         <p className="text-lg">{releaseYear}</p>
         <p className="text-lg">{movie.runtime}</p>
       </div>

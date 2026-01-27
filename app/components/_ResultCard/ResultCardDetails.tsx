@@ -19,12 +19,12 @@ export const ResultCardDetails: React.FC<ResultDetailsProps> = ({ movie }) => {
 
   return (
     <div className="flex flex-col justify-center h-full space-y-1">
-      <h2 className="font-bold text-lg">{movie.title}</h2>
+      <h2 className="font-bold text-xl">{movie.title}</h2>
       <div className="flex flex-row gap-3">
-        <p className="text-sm">{releaseYear}</p>
-        <p className="text-sm">{movie.runtime}</p>
+        <p className="text-md">{releaseYear}</p>
+        <p className="text-md">{movie.runtime}</p>
       </div>
-      <p className="text-sm">{genres}</p>
+      <p className="text-xs sm:text-sm line-clamp-2">{genres}</p>
       <ResultCardReviews
         IMDBRating={
           movie.ratings?.find((r) => r.Source === "Internet Movie Database")

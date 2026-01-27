@@ -122,14 +122,15 @@ export default function Home() {
 
 	return (
 		<RemoveScroll>
-			<div className="relative min-h-screen bg-primary p-4">
-				{currentScreen === "home" && <HomePage onNavigate={handleNavigate} onCreateRoom={handleCreateRoom} />}
-				{currentScreen === "join" && <JoinPage onNavigate={handleNavigate} onJoinRoom={handleJoinRoom} />}
-				{currentScreen === "create" && (
+			<div className="relative min-h-dvh bg-primary px-4 py-4">
+				<div className="mx-auto w-full max-w-screen-sm">
+					{currentScreen === "home" && <HomePage onNavigate={handleNavigate} onCreateRoom={handleCreateRoom} />}
+					{currentScreen === "join" && <JoinPage onNavigate={handleNavigate} onJoinRoom={handleJoinRoom} />}
+					{currentScreen === "create" && (
 					<CreatePage onNavigate={handleNavigate} setMovies={setMovies} roomCode={roomCode} />
 				)}
-				{currentScreen === "waiting" && <WaitingPage onNavigate={handleNavigate} roomCode={roomCode} />}
-				{currentScreen === "review" && (
+					{currentScreen === "waiting" && <WaitingPage onNavigate={handleNavigate} roomCode={roomCode} />}
+					{currentScreen === "review" && (
 					<VotingPage
 						movies={movies ?? []}
 						setResults={setResults}
@@ -137,7 +138,8 @@ export default function Home() {
 						roomCode={roomCode}
 					/>
 				)}
-				{currentScreen === "results" && <ResultsPage results={results} />}
+					{currentScreen === "results" && <ResultsPage results={results} />}
+				</div>
 			</div>
 		</RemoveScroll>
 	);
