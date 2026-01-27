@@ -59,7 +59,7 @@ export const ResultCardModal: React.FC<ResultCardModalProps> = ({
                     <strong>Release date:</strong> {movie.release_date}
                   </div>
                   <div>
-                    <strong>Runtime</strong> {movie.runtime} minutes
+                    <strong>Runtime</strong> {movie.runtime}
                   </div>
                   <div>
                     <strong>Director</strong> {movie.director}
