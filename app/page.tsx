@@ -1,225 +1,43 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useSession } from "./context/SessionContext";
 import HomePage from "./components/_components/_pages/HomePage";
-import CreatePage from "./components/_components/_pages/CreatePage";
-import WaitingPage from "./components/_components/_pages/WaitingPage";
-import JoinPage from "./components/_components/_pages/JoinPage";
-import ResultsPage from "./components/_components/_pages/ResultPage";
-import VotingPage from "./components/_components/_pages/VotingPage";
-import { CustomMovie, Result } from "@/types/movies";
-import { socket } from "./socket";
-
-type Screen = "home" | "create" | "join" | "waiting" | "review" | "results";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
-	const [currentScreen, setCurrentScreen] = useState<Screen>("home");
-	const [roomCode, setRoomCode] = useState<string>("");
-	const currentScreenRef = useRef<Screen>("home"); // Add ref to track screen
+	const { createSession, roomCode } = useSession();
+	const router = useRouter();
 
-	const [movies, setMovies] = useState<CustomMovie[]>([]);
-	const [results, setResults] = useState<Result[]>([]);
-	const [playerCount, setPlayerCount] = useState<number>(0);
 
-	// Keep ref in sync with state
-	useEffect(() => {
-		currentScreenRef.current = currentScreen;
-	}, [currentScreen]);
 
-	// Connect socket when component mounts - ONLY ONCE
-	useEffect(() => {
-		socket.connect();
-
-		socket.on("connect", () => {
-			//console.log("✅ Socket connected:", socket.id);
-		});
-
-		socket.on("joined-session", (data) => {
-			//console.log("✅ Successfully joined session:", data);
-		});
-
-		socket.on("player-count", (data) => {
-			console.log("👥 Player count updated:", data.count);
-			setPlayerCount(data.count);
-		});
-
-		socket.on("session-update", (data) => {
-			//console.log("🔔 Session update received:", data);
-			//console.log("📍 Current screen:", currentScreenRef.current);
-
-			// Handle game start - only navigate if we're still in create/waiting screens
-			if (data.sessionState === true && data.currentMovies) {
-				//console.log("📽️ Received movies:", data.currentMovies.length);
-				setMovies(data.currentMovies);
-
-				// Use ref to get current screen value without closure issues
-				if (
-					currentScreenRef.current === "create" ||
-					currentScreenRef.current === "waiting"
-				) {
-					//console.log("🎮 Starting game, navigating to review");
-					setCurrentScreen("review");
-				}
-			}
-
-			// Handle results updates (real-time voting)
-			if (data.results) {
-				//console.log("📊 Updated results received:", data.results.length);
-				setResults(data.results);
-			}
-		});
-
-		socket.on("error", (error) => {
-			console.error("❌ Socket error:", error);
-		});
-
-		return () => {
-			socket.off("connect");
-			socket.off("joined-session");
-			socket.off("session-update");
-			socket.off("error");
-			socket.disconnect();
-		};
-	}, []); // Empty array - only run once on mount!
-
-	// Helper to emit join-session with connection check
-	const joinSocketSession = (sessionID: string) => {
-		//console.log("🔵 Attempting to join session:", sessionID, "Socket connected:", socket.connected);
-
-		if (socket.connected) {
-			socket.emit("join-session", sessionID);
+	const handleNavigate = (screen: string, code?: string) => {
+		if (code) {
+			if (screen === "create") router.push(`/create?code=${code}`);
+			else if (screen === "join") router.push(`/join`); // Join page handles input
+			else router.push(`/${screen}?code=${code}`);
 		} else {
-			// Wait for connection, then emit
-			socket.once("connect", () => {
-				//console.log("🔵 Socket connected, now joining session:", sessionID);
-				socket.emit("join-session", sessionID);
-			});
+			router.push(`/${screen}`);
 		}
 	};
 
 	const handleCreateRoom = async () => {
-		const res = await fetch("/api/session/create", { method: "POST" });
-		const data = await res.json();
-
-		if (data.sessionID) {
-			const sessionID = data.sessionID.toString();
-			setRoomCode(sessionID);
-			joinSocketSession(sessionID);
-			setCurrentScreen("create");
+		const code = await createSession();
+		if (code) {
+			console.log("Created session, navigating to:", `/create?code=${code}`);
+			router.push(`/create?code=${code}`);
 		}
 	};
 
-	const handleJoinRoom = async (code: string) => {
-		const res = await fetch("/api/session/join", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ sessionID: code }),
-		});
-
-		if (res.ok) {
-			setRoomCode(code);
-			joinSocketSession(code);
-			setCurrentScreen("waiting");
-		}
-	};
-
-	const handleNavigate = (screen: Screen, code?: string) => {
-		setCurrentScreen(screen);
-		if (code) setRoomCode(code);
-	};
+	// Better: HomePage component calls onNavigate.
+	// I can pass a handler that calls createSession then router.push.
 
 	return (
-		<div className="relative min-h-dvh flex flex-col items-center justify-center p-4 overflow-hidden">
-			<div className="w-full max-w-md mx-auto relative z-10">
-				<AnimatePresence mode="wait">
-					{currentScreen === "home" && (
-						<motion.div
-							key="home"
-							initial={{ opacity: 0, scale: 0.95, y: 10 }}
-							animate={{ opacity: 1, scale: 1, y: 0 }}
-							exit={{ opacity: 0, scale: 0.95, y: -10 }}
-							transition={{ duration: 0.3 }}
-						>
-							<HomePage
-								onNavigate={handleNavigate}
-								onCreateRoom={handleCreateRoom}
-							/>
-						</motion.div>
-					)}
-					{currentScreen === "join" && (
-						<motion.div
-							key="join"
-							initial={{ opacity: 0, x: 20 }}
-							animate={{ opacity: 1, x: 0 }}
-							exit={{ opacity: 0, x: -20 }}
-							transition={{ duration: 0.3 }}
-						>
-							<JoinPage
-								onNavigate={handleNavigate}
-								onJoinRoom={handleJoinRoom}
-							/>
-						</motion.div>
-					)}
-					{currentScreen === "create" && (
-						<motion.div
-							key="create"
-							initial={{ opacity: 0, x: 20 }}
-							animate={{ opacity: 1, x: 0 }}
-							exit={{ opacity: 0, x: -20 }}
-							transition={{ duration: 0.3 }}
-						>
-							<CreatePage
-								onNavigate={handleNavigate}
-								setMovies={setMovies}
-								roomCode={roomCode}
-								playerCount={playerCount}
-							/>
-						</motion.div>
-					)}
-					{currentScreen === "waiting" && (
-						<motion.div
-							key="waiting"
-							initial={{ opacity: 0, x: 20 }}
-							animate={{ opacity: 1, x: 0 }}
-							exit={{ opacity: 0, x: -20 }}
-							transition={{ duration: 0.3 }}
-						>
-							<WaitingPage
-								onNavigate={handleNavigate}
-								roomCode={roomCode}
-								playerCount={playerCount}
-							/>
-						</motion.div>
-					)}
-					{currentScreen === "review" && (
-						<motion.div
-							key="review"
-							initial={{ opacity: 0, scale: 0.9 }}
-							animate={{ opacity: 1, scale: 1 }}
-							exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
-							transition={{ duration: 0.4 }}
-						>
-							<VotingPage
-								movies={movies ?? []}
-								setResults={setResults}
-								onNavigate={handleNavigate}
-								roomCode={roomCode}
-							/>
-						</motion.div>
-					)}
-					{currentScreen === "results" && (
-						<motion.div
-							key="results"
-							initial={{ opacity: 0, scale: 0.9 }}
-							animate={{ opacity: 1, scale: 1 }}
-							transition={{ duration: 0.5, delay: 0.2 }}
-						>
-							<ResultsPage results={results} />
-						</motion.div>
-					)}
-				</AnimatePresence>
-			</div>
-		</div>
+		<main className="min-h-dvh flex flex-col items-center justify-center p-4 overflow-hidden">
+			<HomePage
+				onNavigate={handleNavigate}
+				onCreateRoom={handleCreateRoom} // HomePage calls this then onNavigate... wait HomePage logic is specific.
+			/>
+		</main>
 	);
 }
