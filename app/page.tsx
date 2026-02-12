@@ -33,11 +33,9 @@ export default function Home() {
 	// I can pass a handler that calls createSession then router.push.
 
 	return (
-		<main className="min-h-dvh flex flex-col items-center justify-center p-4 overflow-hidden">
-			<HomePage
-				onNavigate={handleNavigate}
-				onCreateRoom={handleCreateRoom} // HomePage calls this then onNavigate... wait HomePage logic is specific.
-			/>
-		</main>
+		<HomePage
+			onNavigate={handleNavigate}
+			onCreateRoom={handleCreateRoom}
+		/>
 	);
 }

@@ -33,7 +33,9 @@ export default function RootLayout({
 				<ReactQueryProvider>
 					<SessionProvider>
 						<GlobalLoader />
-						{children}
+						<main className="min-h-dvh flex flex-col items-center justify-center p-4">
+							{children}
+						</main>
 					</SessionProvider>
 				</ReactQueryProvider>
 			</body>
