@@ -34,7 +34,7 @@ export default function JoinPage({ onNavigate, onJoinRoom }: JoinPageProps) {
 			</div>
 
 			<div className="flex flex-col items-center gap-2 w-full">
-				<h2 className="text-4xl text-text font-black text-center">Room Code</h2>
+				<h2 className="text-4xl font-black text-center text-gradient">Room Code</h2>
 				<RoomCode isHost={false} code={guestCode} onCodeChange={(code) => setGuestCode(code)} />
 			</div>
 

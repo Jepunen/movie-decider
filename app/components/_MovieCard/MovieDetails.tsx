@@ -24,7 +24,7 @@ export const MovieDetails: React.FC<MovieDetailsProps> = ({ movie }) => {
         <p className="text-lg">{releaseYear}</p>
         <p className="text-lg">{movie.runtime}</p>
       </div>
-      <p className="text-md text-text mb-1">{genres}</p>
+      <p className="text-md text-foreground/60 mb-1">{genres}</p>
     </div>
   );
 };

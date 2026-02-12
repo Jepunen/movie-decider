@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import HomePage from "./components/_components/_pages/HomePage";
 import CreatePage from "./components/_components/_pages/CreatePage";
-import { RemoveScroll } from "react-remove-scroll";
 import WaitingPage from "./components/_components/_pages/WaitingPage";
 import JoinPage from "./components/_components/_pages/JoinPage";
 import ResultsPage from "./components/_components/_pages/ResultPage";
@@ -130,49 +130,96 @@ export default function Home() {
 	};
 
 	return (
-		<RemoveScroll>
-			<div className="relative min-h-dvh bg-primary px-4 py-4">
-				<div className="mx-auto w-full max-w-screen-sm">
+		<div className="relative min-h-dvh flex flex-col items-center justify-center p-4 overflow-hidden">
+			<div className="w-full max-w-md mx-auto relative z-10">
+				<AnimatePresence mode="wait">
 					{currentScreen === "home" && (
-						<HomePage
-							onNavigate={handleNavigate}
-							onCreateRoom={handleCreateRoom}
-						/>
+						<motion.div
+							key="home"
+							initial={{ opacity: 0, scale: 0.95, y: 10 }}
+							animate={{ opacity: 1, scale: 1, y: 0 }}
+							exit={{ opacity: 0, scale: 0.95, y: -10 }}
+							transition={{ duration: 0.3 }}
+						>
+							<HomePage
+								onNavigate={handleNavigate}
+								onCreateRoom={handleCreateRoom}
+							/>
+						</motion.div>
 					)}
 					{currentScreen === "join" && (
-						<JoinPage
-							onNavigate={handleNavigate}
-							onJoinRoom={handleJoinRoom}
-						/>
+						<motion.div
+							key="join"
+							initial={{ opacity: 0, x: 20 }}
+							animate={{ opacity: 1, x: 0 }}
+							exit={{ opacity: 0, x: -20 }}
+							transition={{ duration: 0.3 }}
+						>
+							<JoinPage
+								onNavigate={handleNavigate}
+								onJoinRoom={handleJoinRoom}
+							/>
+						</motion.div>
 					)}
 					{currentScreen === "create" && (
-						<CreatePage
-							onNavigate={handleNavigate}
-							setMovies={setMovies}
-							roomCode={roomCode}
-							playerCount={playerCount}
-						/>
+						<motion.div
+							key="create"
+							initial={{ opacity: 0, x: 20 }}
+							animate={{ opacity: 1, x: 0 }}
+							exit={{ opacity: 0, x: -20 }}
+							transition={{ duration: 0.3 }}
+						>
+							<CreatePage
+								onNavigate={handleNavigate}
+								setMovies={setMovies}
+								roomCode={roomCode}
+								playerCount={playerCount}
+							/>
+						</motion.div>
 					)}
 					{currentScreen === "waiting" && (
-						<WaitingPage
-							onNavigate={handleNavigate}
-							roomCode={roomCode}
-							playerCount={playerCount}
-						/>
+						<motion.div
+							key="waiting"
+							initial={{ opacity: 0, x: 20 }}
+							animate={{ opacity: 1, x: 0 }}
+							exit={{ opacity: 0, x: -20 }}
+							transition={{ duration: 0.3 }}
+						>
+							<WaitingPage
+								onNavigate={handleNavigate}
+								roomCode={roomCode}
+								playerCount={playerCount}
+							/>
+						</motion.div>
 					)}
 					{currentScreen === "review" && (
-						<VotingPage
-							movies={movies ?? []}
-							setResults={setResults}
-							onNavigate={handleNavigate}
-							roomCode={roomCode}
-						/>
+						<motion.div
+							key="review"
+							initial={{ opacity: 0, scale: 0.9 }}
+							animate={{ opacity: 1, scale: 1 }}
+							exit={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
+							transition={{ duration: 0.4 }}
+						>
+							<VotingPage
+								movies={movies ?? []}
+								setResults={setResults}
+								onNavigate={handleNavigate}
+								roomCode={roomCode}
+							/>
+						</motion.div>
 					)}
 					{currentScreen === "results" && (
-						<ResultsPage results={results} />
+						<motion.div
+							key="results"
+							initial={{ opacity: 0, scale: 0.9 }}
+							animate={{ opacity: 1, scale: 1 }}
+							transition={{ duration: 0.5, delay: 0.2 }}
+						>
+							<ResultsPage results={results} />
+						</motion.div>
 					)}
-				</div>
+				</AnimatePresence>
 			</div>
-		</RemoveScroll>
+		</div>
 	);
 }

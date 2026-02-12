@@ -1,6 +1,7 @@
 import React, { ButtonHTMLAttributes, forwardRef } from "react";
+import { motion, HTMLMotionProps } from "framer-motion";
 
-export interface GenreButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface GenreButtonProps extends HTMLMotionProps<"button"> {
   selected?: boolean;
 }
 
@@ -10,22 +11,23 @@ const GenreButton = forwardRef<HTMLButtonElement, GenreButtonProps>(
     ref,
   ) {
     return (
-      <button
+      <motion.button
         ref={ref}
         type="button"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         className={`
-        px-2.5 py-1 sm:px-3.5 sm:py-1.5 md:px-4 md:py-2 lg:px-6 lg:py-3 rounded-full flex-none border-2 sm:border-2 md:border-3 lg:border-6 font-semibold text-xs sm:text-sm md:text-sm lg:text-base transition-colors duration-200
-        ${
-          selected
-            ? "bg-primary border-accent text-text"
-            : "bg-secondary border-secondary text-text"
-        }
+        px-4 py-2 rounded-full flex-none font-bold text-sm transition-all duration-200 border
+        ${selected
+            ? "bg-primary border-primary text-white shadow-lg shadow-primary/30"
+            : "bg-white/5 border-white/10 text-foreground/80 hover:bg-white/10 hover:border-white/20"
+          }
         ${className}
       `}
         {...rest}
       >
         {children}
-      </button>
+      </motion.button>
     );
   },
 );
