@@ -65,6 +65,21 @@ app.prepare().then(() => {
 
 				broadcastPlayerCount(sessionIDStr);
 
+				// Fetch current session data to send to the newly joined client
+				const sessionData = await new Redis({
+					host: process.env.REDIS_HOST,
+					port: Number(process.env.REDIS_PORT),
+				}).get(`session:${sessionIDStr}`);
+
+				if (sessionData) {
+					try {
+						const parsedData = JSON.parse(sessionData);
+						socket.emit("session-update", parsedData);
+					} catch (e) {
+						console.error("Error parsing initial session data", e);
+					}
+				}
+
 				socket.emit("joined-session", { sessionID });
 			} catch (error) {
 				//console.error("❌ Error joining session:", error);
