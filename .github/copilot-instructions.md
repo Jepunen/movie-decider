@@ -1,127 +1,125 @@
-# Copilot Instructions for Movie Decider (NextMovie)
+# Copilot Instructions — Movie Decider
 
 ## Project Overview
 
-A multiplayer movie selection web app where users create/join sessions, vote on movies together, and see combined results. Built with real-time communication for synchronized voting experiences.
+Movie Decider is a real-time multiplayer movie voting app. Users create or join rooms via 6-digit codes, vote on movies (1–5 scale), and see ranked results by compatibility. The stack is **Next.js 16 (App Router) + React 19 + Socket.io + Redis + Tailwind CSS v4**.
 
 ## Tech Stack
 
-- **Framework:** Next.js 16 with App Router
-- **Runtime:** React 19, TypeScript
-- **Styling:** Tailwind CSS v4 with custom theme colors
-- **Real-time:** Socket.io (client + server)
-- **Database:** Redis (ioredis) for session storage and pub/sub
-- **Data Fetching:** TanStack React Query
-- **Animations:** Framer Motion
-- **Package Manager:** pnpm
+- **Runtime:** Node.js with ESM (`"type": "module"`)
+- **Framework:** Next.js 16 App Router with a custom HTTP server (`server.js`) that hosts both Next.js and Socket.io on port 3000
+- **Language:** TypeScript (strict mode). `server.js` and `app/socket.js` are plain JS
+- **Package manager:** pnpm
+- **Styling:** Tailwind CSS v4 (utility classes inline, no CSS modules)
+- **State management:** React Context (`SessionContext`) + Socket.io for real-time sync
+- **Data fetching:** React Query (`@tanstack/react-query`) for client-side caching, Next.js `fetch` with `next.revalidate` for server-side caching
+- **Animations:** Framer Motion (`motion.*`, `AnimatePresence`, `layoutId`) and `react-card-flip`
+- **UI primitives:** Headless UI (`Dialog`, `Transition`)
+- **Database:** Redis via `ioredis` (session data with 1-hour TTL, pub/sub for real-time updates)
+- **External APIs:** TMDB (discover + movie details) and OMDB (ratings, director, actors)
 
 ## Project Structure
 
 ```
+server.js               # Custom Node HTTP server (Next.js + Socket.io)
 app/
-├── api/                    # Next.js API routes
-├── components/
-│   └── _components/
-│       ├── _pages/         # Page-level components (HomePage, VotingPage, etc.)
-│       ├── _ui/            # Reusable UI components
-│       └── [Component].tsx # Feature components
-│   └── _[ComponentName]/   # Component-specific sub-components
-├── constants/              # App constants (genres, etc.)
-lib/                        # Utility functions and providers
-redis/                      # Redis connection and helpers
-types/                      # TypeScript type definitions
-server.js                   # Custom Node.js server with Socket.io
+  socket.js             # Singleton Socket.io client (autoConnect: false)
+  layout.tsx            # Root layout: ReactQueryProvider → SessionProvider → GlobalLoader → children
+  context/
+    SessionContext.tsx   # Session state, socket events, room management
+  api/                  # Next.js Route Handlers (Web Request/Response API)
+    session/            # create, join, updateScore
+    movies/             # GET — fetches from TMDB + OMDB
+    score/              # POST — submit votes, calculate results
+    start-game/         # POST — transitions session to voting state
+  components/
+    _components/        # Shared components (Button, MovieCard, RoomCode, etc.)
+      _pages/           # Full presentational page components (HomePage, VotingPage, etc.)
+      _ui/              # Atomic UI primitives (Header)
+    _MovieCard/         # MovieCard sub-components
+    _ResultCard/        # ResultCard sub-components
+    _GenreSelector/     # GenreSelector sub-components
+  constants/            # Static data (genre list with TMDB IDs)
+  create/ join/ vote/ waiting/ results/  # Route pages (thin client wrappers)
+lib/
+  movies.ts             # TMDB/OMDB fetching pipeline, useMovies hook
+  providers.tsx         # React Query provider setup
+redis/
+  redis.ts              # Redis singleton, session CRUD helpers, pub/sub
+types/
+  movies.ts             # Movie, CustomMovie, Result, DiscoverMovieParams
+  redisData.ts          # redisData, redisMovieData, updateScoreType
+  screen.ts             # Screen union type
 ```
 
-## Code Conventions
+## Architecture Patterns
+
+### Page → Presentational Component Pattern
+Route pages (`app/create/page.tsx`, etc.) are thin `"use client"` wrappers that:
+1. Read URL query params via `useSearchParams()` (wrapped in `<Suspense>`)
+2. Pull session state from `useSession()` context
+3. Call `joinSession(code)` if needed
+4. Define a `handleNavigate` callback mapping screen names to `router.push()` calls
+5. Render the corresponding page component from `_pages/` with props
+
+### Real-Time Data Flow
+1. API routes mutate session data in Redis via `updateSessionData()`
+2. `updateSessionData()` publishes to a Redis pub/sub channel (`session:{id}:updates`)
+3. The custom server's per-socket Redis subscriber receives the message
+4. Server forwards it as a `"session-update"` Socket.io event to the client
+5. `SessionContext` handles the event and updates React state
+
+### Movie Fetching Pipeline
+TMDB Discover → pick 10 random movies → TMDB Details (get IMDB ID) → OMDB enrichment (ratings, cast) → `CustomMovie[]`. Concurrency limited to 5 via `p-limit`.
+
+## Coding Conventions
+
+### General
+- Use **tab indentation**
+- Use **TypeScript** for all new code (except `server.js` and `socket.js`)
+- Use **strict mode** TypeScript
+- Import with the `@/` path alias (maps to project root)
+- Use **ESM** imports (`import`/`export`, not `require`)
+- **Default exports** for components, **named exports** for sub-components and utilities
 
 ### Components
+- **PascalCase** filenames for all components
+- Props interfaces named `{ComponentName}Props`, defined in the same file
+- Underscore-prefixed folders (`_ComponentName/`) group sub-components belonging to a parent
+- Use `"use client"` directive only on components that need client-side features
+- Prefer **function declarations** over arrow functions for components
+- Use `forwardRef` when the component needs to expose a ref (e.g., Button)
 
-- Use `"use client"` directive for client components requiring hooks/interactivity
-- Define props interfaces directly above component declarations
-- Use functional components with TypeScript
-- Naming: PascalCase for components, camelCase for functions/variables
-
-```tsx
-interface ComponentProps {
-  propName: string;
-  onAction: (value: string) => void;
-}
-
-export default function Component({ propName, onAction }: ComponentProps) {
-  // ...
-}
-```
+### Styling
+- **Tailwind CSS v4** utility classes inline — no CSS modules or styled-components
+- Custom theme colors are defined as CSS custom properties in `globals.css` and mapped via the `@theme` block
+- Use the project's custom utilities where appropriate: `.glass`, `.glass-card`, `.text-gradient`
+- Dark theme color palette: Deep Slate (background), Electric Violet (primary), Sky Blue (secondary), Rose (accent)
 
 ### API Routes
+- Use Next.js Route Handlers with the Web `Request`/`Response` APIs
+- Export named async functions matching HTTP methods (`GET`, `POST`)
+- Parse JSON request bodies, interact with Redis, return `Response.json()`
+- No middleware pattern
 
-- Located in `app/api/[route]/route.ts`
-- Use Next.js Response.json() for responses
-- Handle Redis connection status before operations
-- Include proper error handling with try/catch
-
-```typescript
-export async function POST(req: Request) {
-  try {
-    const redis = getRedis();
-    if (redis.status !== "ready") {
-      await redis.connect();
-    }
-    // ... logic
-    return Response.json(data, { status: 200 });
-  } catch (error) {
-    return Response.json({ message: "Error" }, { status: 500 });
-  }
-}
-```
-
-### Redis Patterns
-
-- Use `getRedis()` singleton from `@/redis/redis`
-- Session keys follow pattern: `session:${sessionID}`
-- Pub/sub channels: `session:${sessionID}:updates`
-- Sessions expire after 1 hour (3600 seconds)
-
-### Socket.io Events
-
-- Client connects via `socket.connect()` from `@/app/socket`
-- Key events: `join-session`, `session-update`, `player-count`
-- Server broadcasts updates via Redis pub/sub
-
-## Styling
-
-- Use Tailwind CSS utility classes
-- Custom theme colors defined in `globals.css`:
-  - `--color-primary: #222831` (dark background)
-  - `--color-secondary: #393E46`
-  - `--color-accent: #FFD369` (yellow accent)
-  - `--color-text: #EEEEEE`
-- Use Geist fonts (`--font-geist-sans`, `--font-geist-mono`)
-
-## Type Definitions
-
-- Movie types in `types/movies.ts` (CustomMovie, Movie, OMDBMovie, etc.)
-- Redis data types in `types/redisData.ts`
-- Screen navigation type in `types/screen.ts`
-
-## External APIs
-
-- **TMDB API:** Movie discovery and details (`process.env.TMDB_BASE_URL`, `process.env.TMDB_API_KEY`)
-- **OMDB API:** Additional movie ratings and metadata
-
-## Development
-
-```bash
-pnpm dev      # Start dev server (runs server.js)
-pnpm build    # Build for production
-pnpm start    # Start production server
-pnpm lint     # Run ESLint
-```
+### Types
+- Domain types use **PascalCase** (`CustomMovie`, `Result`, `Movie`)
+- Redis-specific types use **camelCase** (`redisData`, `redisMovieData`)
+- All types live in `types/`
 
 ## Environment Variables
 
-Required:
-- `REDIS_HOST` - Redis server hostname
-- `REDIS_PORT` - Redis server port
-- `TMDB_BASE_URL` - TMDB API base URL
-- `TMDB_API_KEY` - TMDB API bearer token
+```
+TMDB_BASE_URL    # TMDB API base URL
+TMDB_API_KEY     # TMDB API key (Bearer token)
+OMDB_API_KEY     # OMDB API key
+REDIS_HOST       # Redis server host
+REDIS_PORT       # Redis server port
+```
+
+## Commands
+
+- `pnpm dev` — Start dev server (runs `node server.js`)
+- `pnpm build` — Build for production (`next build`)
+- `pnpm start` — Start production server (`NODE_ENV=production node server.js`)
+- `pnpm lint` — Run ESLint
