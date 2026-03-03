@@ -8,7 +8,7 @@
   --primary: 263 70% 50%;    /* #6d28d9 - Electric Violet */
   --primary-foreground: 210 40% 98%;
 
-  --secondary: 199 89% 48%;  /* #0ea5e9 - Sky Blue */
+  --secondary: 199 89% 18%; 
   --secondary-foreground: 222 47% 11%;
 
   --accent: 328 100% 54%;    /* #f43f5e - Rose */
@@ -83,14 +83,29 @@
   }
 }
 
+html {
+  overflow: hidden;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
   min-height: 100dvh;
+  overflow-x: hidden;
+  scrollbar-width: none;
   /* Premium subtle gradient background */
   background-image: 
     radial-gradient(circle at 15% 50%, rgba(109, 40, 217, 0.15), transparent 25%),
     radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.15), transparent 25%);
   background-attachment: fixed;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
