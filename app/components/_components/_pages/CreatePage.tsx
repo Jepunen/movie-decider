@@ -99,7 +99,7 @@ export default function CreatePage({
 
 			{selected === "preferences" && (
 				<div className="flex flex-col items-center gap-2 w-full mt-2 mb-2">
-					<h3 className="text-2xl font-semibold text-text">
+					<h3 className="text-2xl font-semibold text-foreground">
 						Select Genres
 					</h3>
 					<GenreSelector
@@ -110,7 +110,7 @@ export default function CreatePage({
 			)}
 
 			<div className="flex flex-col items-center gap-2 w-full mt-2">
-				<h2 className="text-4xl text-text font-black text-center">
+				<h2 className="text-4xl font-black text-center text-gradient">
 					Room Code
 				</h2>
 				{/* TODO: Implement function to create the room code */}

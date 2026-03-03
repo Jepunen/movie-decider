@@ -15,7 +15,7 @@ export const MovieCardFront: React.FC<MovieCardFrontProps> = ({
 }) => {
   return (
     <div
-      className="p-4 rounded-xl shadow w-80 h-[480px] bg-secondary front flex flex-col overflow-y-auto"
+      className="p-4 rounded-3xl w-80 h-[480px] glass-card front flex flex-col overflow-y-auto"
       onClick={onClick}
     >
       <MoviePoster posterPath={movie.poster_url} title={movie.title} priority />

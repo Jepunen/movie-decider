@@ -2,9 +2,11 @@ import React from "react";
 
 const Header = () => {
   return (
-    <h1 className="text-text font-black text-4xl text-center p-2.5">
-      NextMovie
-    </h1>
+    <div className="w-full flex justify-center mb-2">
+      <h1 className="text-4xl md:text-5xl font-black text-center tracking-tighter">
+        <span className="text-gradient">NextMovie</span>
+      </h1>
+    </div>
   );
 };
 

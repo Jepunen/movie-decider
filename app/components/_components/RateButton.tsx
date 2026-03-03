@@ -26,12 +26,12 @@ export default function RateButton({ rate, ...rest }: RateButtonProps) {
   return (
     <button
       {...rest}
-      className={`transition-transform duration-150 ease-out active:scale-95  ${rest.className ?? ""}`}
+      className={`transition-transform duration-150 ease-out active:scale-90 hover:scale-110 ${rest.className ?? ""}`}
     >
       <div
-        className={`w-12 h-12 rounded-full flex items-center justify-center ${colorClass}`}
+        className={`w-14 h-14 rounded-full flex items-center justify-center ${colorClass} shadow-lg shadow-black/20 border-2 border-white/10`}
       >
-        <span className="text-4xl leading-none">{emojis[rate]}</span>
+        <span className="text-4xl leading-none filter drop-shadow-sm">{emojis[rate]}</span>
       </div>
     </button>
   );

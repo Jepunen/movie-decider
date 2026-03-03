@@ -31,7 +31,7 @@ export default function WaitingPage({ onNavigate, roomCode, playerCount }: JoinP
 				<span className="text-xl font-semibold">{playerCount} {playerCount === 1 ? 'player' : 'players'}</span>
 			</div>
 
-			<div className="text-center mt-6 text-2xl font-medium text-text px-4">
+			<div className="text-center mt-6 text-2xl font-medium text-foreground px-4">
 				{selected === "waiting" && (
 					<p>Wait for host to start the game!</p>
 				)}
@@ -46,7 +46,7 @@ export default function WaitingPage({ onNavigate, roomCode, playerCount }: JoinP
 
 			{selected === "preferences" && (
 				<div className="flex flex-col items-center gap-2 w-full px-2">
-					<h3 className="text-2xl font-semibold text-text">
+					<h3 className="text-2xl font-semibold text-foreground">
 						Select Genres
 					</h3>
 					<GenreSelector
