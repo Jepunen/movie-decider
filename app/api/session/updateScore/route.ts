@@ -28,25 +28,40 @@ export async function POST(req: Request) {
 			);
 		}
 
+		// Map raw vote (2–5) to a 0–100 transformed value.
+		function transformVote(raw: number): number {
+			const map: Record<number, number> = { 2: 25, 3: 50, 4: 75, 5: 100 };
+			return map[raw] ?? 50;
+		}
+
 		// check if updated movie has a score
 		const currentMovieData = sessionData.movies[movie.imdb_id];
+		const isVeto = userScore === 1;
+
 		if (!currentMovieData) {
-			// New movie, initialize with score and count of 1
 			sessionData.movies[movie.imdb_id] = {
 				movieData: movie,
-				score: userScore,
-				count: 1,
+				score: isVeto ? 0 : transformVote(userScore),
+				count: isVeto ? 0 : 1,
+				vetoes: isVeto ? 1 : 0,
 			};
 		} else {
-			// Existing movie, calculate new average score
-			const totalScore =
-				currentMovieData.score * currentMovieData.count + userScore;
-			const newCount = currentMovieData.count + 1;
-			sessionData.movies[movie.imdb_id] = {
-				movieData: movie,
-				score: totalScore / newCount,
-				count: newCount,
-			};
+			const currentVetoes = currentMovieData.vetoes ?? 0;
+			if (isVeto) {
+				sessionData.movies[movie.imdb_id] = {
+					...currentMovieData,
+					vetoes: currentVetoes + 1,
+				};
+			} else {
+				const transformed = transformVote(userScore);
+				const totalScore = currentMovieData.score * currentMovieData.count + transformed;
+				const newCount = currentMovieData.count + 1;
+				sessionData.movies[movie.imdb_id] = {
+					...currentMovieData,
+					score: totalScore / newCount,
+					count: newCount,
+				};
+			}
 		}
 		// Save updated data back to Redis
 		await updateSessionData(sessionID, sessionData);

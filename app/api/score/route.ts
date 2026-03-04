@@ -8,6 +8,22 @@ type requestBody = {
 	score: string;
 };
 
+// Maps raw vote (2–5) to a 0–100 transformed value.
+// A vote of 1 is a veto and is handled separately — do not pass 1 here.
+function transformVote(raw: number): number {
+	const map: Record<number, number> = { 2: 25, 3: 50, 4: 75, 5: 100 };
+	return map[raw] ?? 50;
+}
+
+// Calculates the veto-penalised compatibility score (0–100) for a single movie entry.
+function compatibilityScore(score: number, count: number, vetoes: number): number {
+	const total = count + vetoes;
+	if (total === 0) return 0;
+	if (count === 0) return 0; // all votes were vetoes
+	const vetoFactor = Math.pow(count / total, 3.5);
+	return Math.round(Math.min(100, Math.max(0, score * vetoFactor)));
+}
+
 // Helper to calculate results from session data
 function calculateResults(sessionData: redisData): Result[] {
 	const results: Result[] = [];
@@ -16,7 +32,11 @@ function calculateResults(sessionData: redisData): Result[] {
 		const movieEntry = sessionData.movies[imdbId];
 		results.push({
 			movie: movieEntry.movieData,
-			compatibility: Math.round(movieEntry.score * 20), // Convert 1-5 to 20-100
+			compatibility: compatibilityScore(
+				movieEntry.score,
+				movieEntry.count,
+				movieEntry.vetoes ?? 0,
+			),
 		});
 	}
 
@@ -45,21 +65,32 @@ export async function POST(req: Request) {
 
 		// Update movie scores
 		const currentMovieData = sessionData.movies[movie.imdb_id];
+		const isVeto = userScore === 1;
+
 		if (!currentMovieData) {
 			sessionData.movies[movie.imdb_id] = {
 				movieData: movie,
-				score: userScore,
-				count: 1,
+				score: isVeto ? 0 : transformVote(userScore),
+				count: isVeto ? 0 : 1,
+				vetoes: isVeto ? 1 : 0,
 			};
 		} else {
-			const totalScore =
-				currentMovieData.score * currentMovieData.count + userScore;
-			const newCount = currentMovieData.count + 1;
-			sessionData.movies[movie.imdb_id] = {
-				movieData: movie,
-				score: totalScore / newCount,
-				count: newCount,
-			};
+			const currentVetoes = currentMovieData.vetoes ?? 0;
+			if (isVeto) {
+				sessionData.movies[movie.imdb_id] = {
+					...currentMovieData,
+					vetoes: currentVetoes + 1,
+				};
+			} else {
+				const transformed = transformVote(userScore);
+				const totalScore = currentMovieData.score * currentMovieData.count + transformed;
+				const newCount = currentMovieData.count + 1;
+				sessionData.movies[movie.imdb_id] = {
+					...currentMovieData,
+					score: totalScore / newCount,
+					count: newCount,
+				};
+			}
 		}
 
 		// Calculate updated results
