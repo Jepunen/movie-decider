@@ -2,7 +2,6 @@ import { useState } from "react";
 import Header from "../_ui/Header";
 import StatusImage from "../StatusImage";
 import PillButtonGroup from "../PillButtonGroup";
-import BackButton from "../BackButton";
 import GenreSelector from "../GenreSelector";
 import type { Screen } from "@/types/screen";
 
@@ -20,8 +19,6 @@ export default function WaitingPage({ onNavigate, roomCode, playerCount }: JoinP
 
 	return (
 		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-6 pb-6">
-			<BackButton onClick={() => onNavigate("join")} />
-
 			<div className="pt-0.5">
 				<Header />
 			</div>
