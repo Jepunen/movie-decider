@@ -4,7 +4,6 @@ import StatusImage from "../StatusImage";
 import Button from "../Button";
 import RoomCode from "../RoomCode";
 import type { Screen } from "@/types/screen";
-import BackButton from "../BackButton";
 import { useMutation } from "@tanstack/react-query";
 
 interface JoinPageProps {
@@ -23,9 +22,7 @@ export default function JoinPage({ onNavigate, onJoinRoom }: JoinPageProps) {
 
 	return (
 		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-6 pb-6">
-			<BackButton onClick={() => onNavigate("home")} />
-
-			<div className="pt-10">
+			<div className="pt-0.5">
 				<Header />
 			</div>
 

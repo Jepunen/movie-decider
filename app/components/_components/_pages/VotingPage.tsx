@@ -84,7 +84,7 @@ export default function VotingPage({
 
 	return (
 		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm mx-auto gap-5 pb-6 px-2">
-			<div className="pt-10">
+			<div className="pt-0.5">
 				<Header />
 			</div>
 			<div className="flex flex-col gap-4 flex-1">

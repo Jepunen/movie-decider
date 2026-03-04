@@ -7,7 +7,6 @@ import Button from "../Button";
 import RoomCode from "../RoomCode";
 import PillButtonGroup from "../PillButtonGroup";
 import type { Screen } from "@/types/screen";
-import BackButton from "../BackButton";
 import GenreSelector from "../GenreSelector";
 import { useMovies } from "@/lib/movies";
 import { socket } from "@/app/socket";
@@ -82,9 +81,7 @@ export default function CreatePage({
 	};
 
 	return (
-		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-4 pb-6">
-			<BackButton onClick={() => onNavigate("home")} />
-
+		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-5 pb-6">
 			<div className="pt-0.5">
 				<Header />
 			</div>
