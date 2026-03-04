@@ -11,6 +11,7 @@ import BackButton from "../BackButton";
 import GenreSelector from "../GenreSelector";
 import { useMovies } from "@/lib/movies";
 import { socket } from "@/app/socket";
+import YearRangeSelector from "../YearRangeSelector";
 
 interface CreatePageProps {
 	onNavigate: (screen: Screen, code?: string) => void;
@@ -81,10 +82,10 @@ export default function CreatePage({
 	};
 
 	return (
-		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-5 pb-6">
+		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-4 pb-6">
 			<BackButton onClick={() => onNavigate("home")} />
 
-			<div className="pt-10">
+			<div className="pt-1">
 				<Header />
 			</div>
 
@@ -98,8 +99,14 @@ export default function CreatePage({
 			</div>
 
 			{selected === "preferences" && (
-				<div className="flex flex-col items-center gap-2 w-full mt-2 mb-2">
-					<h3 className="text-2xl font-semibold text-foreground">
+				<div className="flex flex-col items-center gap-2 w-full">
+
+
+					<h3 className="text-xl font-semibold text-foreground">
+						Select Year Range
+					</h3>
+					<YearRangeSelector onChange={() => console.log("year_changed")} />
+					<h3 className="text-xl font-semibold text-foreground">
 						Select Genres
 					</h3>
 					<GenreSelector
@@ -109,7 +116,7 @@ export default function CreatePage({
 				</div>
 			)}
 
-			<div className="flex flex-col items-center gap-2 w-full mt-2">
+			<div className="flex flex-col items-center gap-2 w-full">
 				<h2 className="text-4xl font-black text-center text-gradient">
 					Room Code
 				</h2>
