@@ -25,7 +25,7 @@ export default function JoinPage({ onNavigate, onJoinRoom }: JoinPageProps) {
 		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-6 pb-6">
 			<BackButton onClick={() => onNavigate("home")} />
 
-			<div className="pt-10">
+			<div className="pt-0.5">
 				<Header />
 			</div>
 

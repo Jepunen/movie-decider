@@ -37,7 +37,7 @@ export default function HomePage({ onNavigate, onCreateRoom }: HomePageProps) {
 
 	return (
 		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-6 pb-6">
-			<div className="pt-6">
+			<div className="pt-0.5">
 				<Header />
 			</div>
 

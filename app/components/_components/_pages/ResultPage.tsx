@@ -11,7 +11,7 @@ export default function ResultsPage({
 }: ResultsPageProps) {
 	return (
 		<div className="relative flex flex-col w-full max-w-screen-sm mx-auto h-[calc(100dvh-2rem)] overflow-hidden items-center">
-			<div className="shrink-0 pt-6">
+			<div className="shrink-0 pt-0.5">
 				<Header />
 			</div>
 			<h2 className="text-2xl font-bold my-4 shrink-0 px-4">Results</h2>
