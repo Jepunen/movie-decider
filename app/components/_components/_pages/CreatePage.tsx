@@ -85,7 +85,7 @@ export default function CreatePage({
 		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-4 pb-6">
 			<BackButton onClick={() => onNavigate("home")} />
 
-			<div className="pt-1">
+			<div className="pt-0.5">
 				<Header />
 			</div>
 
