@@ -27,6 +27,7 @@ export default function CreatePage({
 }: CreatePageProps) {
 	const [selected, setSelected] = useState("create");
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
+	const [yearRange, setYearRange] = useState<[number, number]>([2000, new Date().getFullYear()]);
 	const [fetchEnabled, setFetchEnabled] = useState(false);
 
 	const {
@@ -34,6 +35,7 @@ export default function CreatePage({
 		isPending,
 		refetch,
 	} = useMovies({ with_genres: selectedGenres }, fetchEnabled);
+	// } = useMovies({ with_genres: selectedGenres, year_range: yearRange }, fetchEnabled); // TODO: Add year range to API call @Jepunen -R.M.
 
 	useEffect(() => {
 		// Host also listens for updates (in case of reconnection, etc.)
@@ -81,7 +83,7 @@ export default function CreatePage({
 	};
 
 	return (
-		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-5 pb-6">
+		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-4 pb-6">
 			<div className="pt-0.5">
 				<Header />
 			</div>
@@ -102,7 +104,10 @@ export default function CreatePage({
 					<h3 className="text-xl font-semibold text-foreground">
 						Select Year Range
 					</h3>
-					<YearRangeSelector onChange={() => console.log("year_changed")} />
+					<YearRangeSelector
+						init_value={yearRange}
+						onChange={setYearRange}
+					/>
 					<h3 className="text-xl font-semibold text-foreground">
 						Select Genres
 					</h3>

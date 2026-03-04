@@ -17,13 +17,13 @@ export default function YearRangeSelector({
     init_value = [2000, MAX_YEAR],
 }: YearRangeSelectorProps) {
 
-    const [value, setValue] = React.useState<[number, number]>([2000, MAX_YEAR]);
+    const [value, setValue] = React.useState<[number, number]>(init_value);
 
     return (
-        <div className="flex flex-col gap-3 w-full">
-            <div className="flex justify-between text-sm font-semibold">
+        <div className="flex flex-col gap-2 w-full">
+            <div className="flex justify-center text-sm gap-1 font-semibold">
                 <span className="text-violet-400">{value[0]}</span>
-                <span className="text-slate-400 text-sm self-center">Release Year</span>
+                <span className="text-slate-400 text-sm self-center">-</span>
                 <span className="text-sky-400">{value[1]}</span>
             </div>
 
