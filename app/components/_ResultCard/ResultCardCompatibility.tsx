@@ -6,9 +6,9 @@ interface ResultCardCompatibilityProps {
 
 function getColor(score: number | undefined): string {
   if (score === undefined) return "text-gray-400";
-  if (score < 40) return "text-red-500";
-  if (score < 60) return "text-orange-400";
-  if (score < 80) return "text-yellow-400";
+  if (score < 30) return "text-red-500";
+  if (score < 55) return "text-orange-400";
+  if (score < 75) return "text-yellow-400";
   if (score < 90) return "text-lime-400";
   return "text-green-500";
 }
