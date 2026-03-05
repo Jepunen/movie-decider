@@ -168,16 +168,22 @@ export async function getOMDBetails(tmdb_id: number) {
 
 interface MovieQueryParams {
 	with_genres?: number[];
+	year_range?: [number, number];
 }
 
 export function useMovies(params: MovieQueryParams = {}, enabled = false) {
 	return useQuery<CustomMovie[]>({
 		queryKey: ["movies", params],
 		queryFn: async () => {
-			const genreParam = params.with_genres?.join("|");
-			const res = await fetch(
-				`/api/movies?with_genres=${genreParam ?? ""}`,
-			);
+			let searchParams = new URLSearchParams();
+			if (params.with_genres?.length) searchParams.set("with_genres", params.with_genres.join("|"));
+			if (params.year_range) {
+				searchParams.set("primary_release_date.gte", `${params.year_range[0]}-01-01`);
+				searchParams.set("primary_release_date.lte", `${params.year_range[1]}-12-31`);
+			}
+			const res = await fetch(`/api/movies?${searchParams.toString()}`);
+
+			console.log("Fetching movies with params:", params, "Query string:", searchParams.toString());
 			if (!res.ok) throw new Error("Failed to fetch movies");
 			return res.json();
 		},

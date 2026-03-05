@@ -34,7 +34,7 @@ export default function CreatePage({
 		data: movies,
 		isPending,
 		refetch,
-	} = useMovies({ with_genres: selectedGenres }, fetchEnabled);
+	} = useMovies({ with_genres: selectedGenres, year_range: yearRange }, fetchEnabled);
 	// } = useMovies({ with_genres: selectedGenres, year_range: yearRange }, fetchEnabled); // TODO: Add year range to API call @Jepunen -R.M.
 
 	useEffect(() => {

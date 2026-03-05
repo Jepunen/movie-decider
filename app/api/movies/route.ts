@@ -2,13 +2,13 @@
 import { getMovies } from "@/lib/movies";
 
 export async function GET(req: Request) {
-	const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(req.url);
 
-	//console.log("Fetching movies with params:", searchParams.toString());
+    const movies = await getMovies({
+        with_genres: searchParams.get("with_genres") ?? undefined,
+        "primary_release_date.gte": searchParams.get("primary_release_date.gte") ?? undefined,
+        "primary_release_date.lte": searchParams.get("primary_release_date.lte") ?? undefined,
+    });
 
-	const movies = await getMovies({
-		with_genres: searchParams.get("with_genres") ?? undefined,
-	});
-
-	return Response.json(movies);
+    return Response.json(movies);
 }
