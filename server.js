@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import { randomUUID } from "node:crypto";
 import next from "next";
 import { Server } from "socket.io";
 import Redis from "ioredis";
@@ -86,6 +87,43 @@ app.prepare().then(() => {
 				socket.emit("error", { message: "Failed to join session" });
 			}
 		});
+
+		// ── Chat ────────────────────────────────────────────────────────────────
+		// Client emits: { roomCode: string, senderName: string, text: string }
+		// Server broadcasts to every socket in the room (including sender) so the
+		// sender also receives confirmation that the message was delivered.
+		socket.on("chat-message", ({ roomCode, senderName, text }) => {
+			// Basic validation
+			if (
+				typeof roomCode !== "string" ||
+				typeof senderName !== "string" ||
+				typeof text !== "string" ||
+				!text.trim() ||
+				!senderName.trim() ||
+				!roomCode.trim() ||
+				text.length > 500 ||
+				senderName.length > 20
+			) {
+				return;
+			}
+
+			// Only allow the socket to send messages to the room it joined
+			if (socket.data.sessionID !== roomCode) {
+				return;
+			}
+
+			const payload = {
+				id: randomUUID(),
+				senderId: socket.id,
+				senderName: senderName.trim(),
+				text: text.trim(),
+				timestamp: Date.now(),
+			};
+
+			// Broadcast to every client in the room, including the sender
+			io.to(roomCode).emit("chat-message", payload);
+		});
+		// ── End Chat ─────────────────────────────────────────────────────────────
 
 		socket.on("disconnect", () => {
 			//console.log("❌ Client disconnected:", socket.id);
