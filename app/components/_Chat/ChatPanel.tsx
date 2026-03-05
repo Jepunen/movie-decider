@@ -12,24 +12,7 @@ import { useChat } from "@/app/context/ChatContext";
 import ChatNameSetup from "./ChatNameSetup";
 import ChatMessageList from "./ChatMessageList";
 import ChatInput from "./ChatInput";
-
-function CloseIcon() {
-    return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="w-4 h-4"
-            aria-hidden="true"
-        >
-            <path
-                fillRule="evenodd"
-                d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z"
-                clipRule="evenodd"
-            />
-        </svg>
-    );
-}
+import { CloseIcon } from "./ChatIcons";
 
 interface ChatPanelProps {
     roomCode: string;
@@ -71,7 +54,7 @@ function ChatPanel({ roomCode }: ChatPanelProps) {
                                 <div className="flex items-center gap-2">
                                     <div className="w-2 h-2 rounded-full bg-green-400" />
                                     <DialogTitle as="h2" className="text-sm font-bold text-foreground">
-                                        Room chat
+                                        Chat
                                     </DialogTitle>
                                     {chatName && (
                                         <span className="text-xs text-muted-foreground">
