@@ -28,7 +28,7 @@ const PillButtonGroup = React.forwardRef<HTMLDivElement, PillButtonGroupProps>(
               key={option.value}
               onClick={() => onChange(option.value)}
               type="button"
-              className={`relative flex-1 px-6 py-3 rounded-xl text-sm font-bold transition-all duration-200 z-10 ${isSelected ? "text-white" : "text-foreground/60 hover:text-foreground/90"
+              className={`relative flex-1 px-6 py-2 rounded-xl text-sm font-bold transition-all duration-200 z-10 ${isSelected ? "text-white" : "text-foreground/60 hover:text-foreground/90"
                 }`}
             >
               {isSelected && (

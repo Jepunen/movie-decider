@@ -17,7 +17,7 @@ const GenreButton = forwardRef<HTMLButtonElement, GenreButtonProps>(
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         className={`
-        px-4 py-2 rounded-full flex-none font-bold text-sm transition-all duration-200 border
+        px-4 py-1 rounded-full flex-none font-bold text-sm transition-all duration-200 border
         ${selected
             ? "bg-primary border-primary text-white shadow-lg shadow-primary/30"
             : "bg-white/5 border-white/10 text-foreground/80 hover:bg-white/10 hover:border-white/20"

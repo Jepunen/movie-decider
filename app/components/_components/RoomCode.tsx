@@ -22,7 +22,7 @@ const RoomCode: React.FC<RoomCodeProps> = ({ isHost, code, onCodeChange }) => {
     onCodeChange?.(value);
   };
 
-  const commonClasses = "px-4 py-3 text-4xl font-black rounded-2xl text-center w-full max-w-[240px] tracking-[0.2em] outline-none transition-all duration-200";
+  const commonClasses = "px-4 py-2 text-4xl font-black rounded-2xl text-center w-full max-w-[240px] tracking-[0.2em] outline-none transition-all duration-200";
 
   return (
     <div className="flex flex-col items-center gap-2 w-full">

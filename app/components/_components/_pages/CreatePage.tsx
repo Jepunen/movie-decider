@@ -10,6 +10,7 @@ import type { Screen } from "@/types/screen";
 import GenreSelector from "../GenreSelector";
 import { useMovies } from "@/lib/movies";
 import { socket } from "@/app/socket";
+import YearRangeSelector from "../YearRangeSelector";
 
 interface CreatePageProps {
 	onNavigate: (screen: Screen, code?: string) => void;
@@ -26,13 +27,15 @@ export default function CreatePage({
 }: CreatePageProps) {
 	const [selected, setSelected] = useState("create");
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
+	const [yearRange, setYearRange] = useState<[number, number]>([2000, new Date().getFullYear()]);
 	const [fetchEnabled, setFetchEnabled] = useState(false);
 
 	const {
 		data: movies,
 		isPending,
 		refetch,
-	} = useMovies({ with_genres: selectedGenres }, fetchEnabled);
+	} = useMovies({ with_genres: selectedGenres, year_range: yearRange }, fetchEnabled);
+	// } = useMovies({ with_genres: selectedGenres, year_range: yearRange }, fetchEnabled); // TODO: Add year range to API call @Jepunen -R.M.
 
 	useEffect(() => {
 		// Host also listens for updates (in case of reconnection, etc.)
@@ -80,7 +83,7 @@ export default function CreatePage({
 	};
 
 	return (
-		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-5 pb-6">
+		<div className="relative flex flex-col min-h-[calc(100dvh-2rem)] w-full max-w-screen-sm items-center gap-4 pb-6">
 			<div className="pt-0.5">
 				<Header />
 			</div>
@@ -95,8 +98,17 @@ export default function CreatePage({
 			</div>
 
 			{selected === "preferences" && (
-				<div className="flex flex-col items-center gap-2 w-full mt-2 mb-2">
-					<h3 className="text-2xl font-semibold text-foreground">
+				<div className="flex flex-col items-center gap-2 w-full">
+
+
+					<h3 className="text-xl font-semibold text-foreground">
+						Select Year Range
+					</h3>
+					<YearRangeSelector
+						init_value={yearRange}
+						onChange={setYearRange}
+					/>
+					<h3 className="text-xl font-semibold text-foreground">
 						Select Genres
 					</h3>
 					<GenreSelector
@@ -106,7 +118,7 @@ export default function CreatePage({
 				</div>
 			)}
 
-			<div className="flex flex-col items-center gap-2 w-full mt-2">
+			<div className="flex flex-col items-center gap-2 w-full">
 				<h2 className="text-4xl font-black text-center text-gradient">
 					Room Code
 				</h2>
