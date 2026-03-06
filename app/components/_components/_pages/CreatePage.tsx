@@ -73,6 +73,7 @@ export default function CreatePage({
 			body: JSON.stringify({
 				sessionID: roomCode,
 				movies: movieData, // Send movies to be stored in Redis
+				hostGenres: selectedGenres, // Send host genres for merging with guests
 			}),
 		});
 

@@ -1,21 +1,38 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../_ui/Header";
 import StatusImage from "../StatusImage";
 import PillButtonGroup from "../PillButtonGroup";
 import GenreSelector from "../GenreSelector";
 import type { Screen } from "@/types/screen";
 import YearRangeSelector from "../YearRangeSelector";
+import { socket } from "@/app/socket";
 
 interface JoinPageProps {
 	onNavigate: (screen: Screen, code?: string) => void;
 	roomCode: string;
 	playerCount: number;
+	sessionJoined: boolean;
 }
 
-export default function WaitingPage({ onNavigate, roomCode, playerCount }: JoinPageProps) {
+export default function WaitingPage({ onNavigate, roomCode, playerCount, sessionJoined }: JoinPageProps) {
 	const [selected, setSelected] = useState("waiting");
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
 	const [yearRange, setYearRange] = useState<[number, number]>([2000, new Date().getFullYear()]);
+
+
+	useEffect(() => {
+		if (!sessionJoined) return;
+		/* console.log("Emitting guest-genres", { 
+			sessionID: roomCode, 
+			genres: selectedGenres,
+			socketId: socket.id,
+			socketConnected: socket.connected
+		}); */
+		socket.emit("guest-genres", {
+			sessionID: roomCode,
+			genres: selectedGenres,
+		});
+	}, [selectedGenres, roomCode, sessionJoined]);
 
 
 	// Removed duplicate session-update listener - handled in page.tsx
