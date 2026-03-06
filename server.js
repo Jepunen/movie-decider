@@ -125,12 +125,59 @@ app.prepare().then(() => {
 		});
 		// ── End Chat ─────────────────────────────────────────────────────────────
 
+		// ── Guest Genres ──────────────────────────────────────────────────────────────
+		socket.on("guest-genres", async ({ sessionID, genres }) => {
+/* 			console.log("📨 guest-genres received", { sessionID, genres, socketSessionID: socket.data.sessionID });
+
+			console.log("📨 guest-genres received", { 
+				sessionID, 
+				sessionIDType: typeof sessionID,
+				socketSessionID: socket.data.sessionID,
+				socketSessionIDType: typeof socket.data.sessionID,
+				match: socket.data.sessionID === sessionID
+			}); */
+
+			if (
+				typeof sessionID !== "string" ||
+				!Array.isArray(genres) ||
+				!genres.every((g) => typeof g === "number")
+			) {
+				//console.log("❌ Validation failed");
+				return;
+			}
+
+			if (socket.data.sessionID !== sessionID) {
+				//console.log("❌ Session ID mismatch", { socketSession: socket.data.sessionID, received: sessionID });
+				return;
+			}
+
+			const redis = new Redis({
+				host: process.env.REDIS_HOST,
+				port: Number(process.env.REDIS_PORT),
+			});
+
+			const key = `session:${sessionID}:genres:${socket.id}`;
+			await redis.set(key, JSON.stringify(genres), "EX", 60 * 60);
+			//console.log("✅ Stored guest genres in Redis", { key, genres });
+
+			await redis.disconnect();
+		});
+		// ── End Guest Genres ──────────────────────────────────────────────────────────
+
 		socket.on("disconnect", () => {
 			//console.log("❌ Client disconnected:", socket.id);
 
 			const sessionID = socket.data.sessionID;
 			if (sessionID) {
 				broadcastPlayerCount(sessionID);
+
+				// Clean up this guest's genre preferences
+				const redis = new Redis({
+					host: process.env.REDIS_HOST,
+					port: Number(process.env.REDIS_PORT),
+				});
+				redis.del(`session:${sessionID}:genres:${socket.id}`);
+				redis.disconnect();
 			}
 
 			if (socket.data.subscriber) {

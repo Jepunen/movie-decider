@@ -21,6 +21,7 @@ interface SessionContextType {
   setMovies: (movies: CustomMovie[]) => void;
   isLoading: boolean;
   error: string | null;
+  sessionJoined: boolean;
 }
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
@@ -35,6 +36,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [sessionState, setSessionState] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sessionJoined, setSessionJoined] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -52,6 +54,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
     function onJoinedSession(data: { sessionID: string }) {
       setRoomCode(data.sessionID);
+	  setSessionJoined(true);
       setIsLoading(false);
       // Navigation is now handled by components based on state or explicit user action, 
       // but if we just joined, we might want to redirect if we're not already there.
@@ -170,6 +173,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         setMovies: setMoviesState,
         isLoading,
         error,
+		sessionJoined,
       }}
     >
       {children}

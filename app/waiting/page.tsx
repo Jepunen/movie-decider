@@ -7,7 +7,7 @@ import { useEffect, Suspense } from "react";
 import Loading from "@/app/components/Loading";
 
 function WaitingContent() {
-    const { roomCode, playerCount, joinSession, sessionState } = useSession();
+    const { roomCode, playerCount, joinSession, sessionState, sessionJoined } = useSession();
     const searchParams = useSearchParams();
     const code = searchParams.get("code");
     const router = useRouter();
@@ -36,6 +36,7 @@ function WaitingContent() {
             onNavigate={handleNavigate}
             roomCode={code || roomCode || ""}
             playerCount={playerCount}
+			sessionJoined={sessionJoined}
         />
     );
 }
