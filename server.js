@@ -126,16 +126,9 @@ app.prepare().then(() => {
 		// ── End Chat ─────────────────────────────────────────────────────────────
 
 		// ── Guest Genres ──────────────────────────────────────────────────────────────
-		socket.on("guest-genres", async ({ sessionID, genres }) => {
-/* 			console.log("📨 guest-genres received", { sessionID, genres, socketSessionID: socket.data.sessionID });
+		socket.on("guest-genres", async ({ sessionID, genres, yearRange }) => {
 
-			console.log("📨 guest-genres received", { 
-				sessionID, 
-				sessionIDType: typeof sessionID,
-				socketSessionID: socket.data.sessionID,
-				socketSessionIDType: typeof socket.data.sessionID,
-				match: socket.data.sessionID === sessionID
-			}); */
+			console.log("📥 guest-genres received:", { sessionID, genres, yearRange, socketId: socket.id });
 
 			if (
 				typeof sessionID !== "string" ||
@@ -158,7 +151,9 @@ app.prepare().then(() => {
 
 			const key = `session:${sessionID}:genres:${socket.id}`;
 			await redis.set(key, JSON.stringify(genres), "EX", 60 * 60);
-			//console.log("✅ Stored guest genres in Redis", { key, genres });
+			if (yearRange) {
+				await redis.set(`session:${sessionID}:yearRange:${socket.id}`, JSON.stringify(yearRange), "EX", 60 * 60);
+			}
 
 			await redis.disconnect();
 		});
@@ -177,6 +172,7 @@ app.prepare().then(() => {
 					port: Number(process.env.REDIS_PORT),
 				});
 				redis.del(`session:${sessionID}:genres:${socket.id}`);
+				redis.del(`session:${sessionID}:yearRange:${socket.id}`);
 				redis.disconnect();
 			}
 
@@ -185,7 +181,7 @@ app.prepare().then(() => {
 			}
 		});
 	});
-
+ 
 	httpServer
 		.once("error", (err) => {
 			console.error(err);

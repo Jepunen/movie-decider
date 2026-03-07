@@ -74,6 +74,7 @@ export default function CreatePage({
 				sessionID: roomCode,
 				movies: movieData, // Send movies to be stored in Redis
 				hostGenres: selectedGenres, // Send host genres for merging with guests
+				hostYearRange: yearRange,
 			}),
 		});
 

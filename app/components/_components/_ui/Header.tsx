@@ -4,7 +4,7 @@ const Header = () => {
   return (
     <div className="w-full flex justify-center mb-2">
       <h1 className="text-4xl md:text-5xl font-black text-center tracking-tighter">
-        <span className="text-gradient">NextMovie</span>
+        <span className="text-gradient"><a href="/">NextMovie</a></span>
       </h1>
     </div>
   );

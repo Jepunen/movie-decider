@@ -22,17 +22,20 @@ export default function WaitingPage({ onNavigate, roomCode, playerCount, session
 
 	useEffect(() => {
 		if (!sessionJoined) return;
-		/* console.log("Emitting guest-genres", { 
-			sessionID: roomCode, 
-			genres: selectedGenres,
-			socketId: socket.id,
-			socketConnected: socket.connected
-		}); */
+			console.log("🔌 Socket state:", { 
+			connected: socket.connected, 
+			id: socket.id,
+			sessionJoined,
+			roomCode,
+			yearRange,
+			selectedGenres 
+		});
 		socket.emit("guest-genres", {
 			sessionID: roomCode,
 			genres: selectedGenres,
+			yearRange,
 		});
-	}, [selectedGenres, roomCode, sessionJoined]);
+	}, [selectedGenres, yearRange, roomCode, sessionJoined]);
 
 
 	// Removed duplicate session-update listener - handled in page.tsx
