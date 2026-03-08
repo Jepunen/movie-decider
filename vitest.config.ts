@@ -1,14 +1,20 @@
 import { defineConfig } from "vitest/config";
 import { resolve } from "path";
 import { fileURLToPath } from "url";
+import react from "@vitejs/plugin-react";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 export default defineConfig({
+  plugins: [react()],
   test: {
     globals: true,
     environment: "node",
-    include: ["__tests__/**/*.test.ts"],
+    include: ["__tests__/**/*.test.{ts,tsx}"],
+    setupFiles: ["__tests__/setup.ts"],
+    environmentMatchGlobs: [
+      ["**/__tests__/components/**", "jsdom"],
+    ],
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
