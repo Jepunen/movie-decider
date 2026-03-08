@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { socket } from "@/app/socket";
 import { CustomMovie, Result } from "@/types/movies";
+import { GameMode, TournamentState } from "@/types/tournament";
 import { useRouter } from "next/navigation";
 
 interface SessionContextType {
@@ -13,6 +14,8 @@ interface SessionContextType {
   movies: CustomMovie[];
   results: Result[];
   sessionState: boolean; // false = waiting/creating, true = voting/results
+  gameMode: GameMode | null;
+  tournamentState: TournamentState | null;
   joinSession: (code: string) => void;
   createSession: () => Promise<string | null>;
   startGame: () => void;
@@ -34,6 +37,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [movies, setMoviesState] = useState<CustomMovie[]>([]);
   const [results, setResultsState] = useState<Result[]>([]);
   const [sessionState, setSessionState] = useState(false);
+  const [gameMode, setGameMode] = useState<GameMode | null>(null);
+  const [tournamentState, setTournamentState] = useState<TournamentState | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sessionJoined, setSessionJoined] = useState(false);
@@ -56,9 +61,6 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       setRoomCode(data.sessionID);
 	  setSessionJoined(true);
       setIsLoading(false);
-      // Navigation is now handled by components based on state or explicit user action, 
-      // but if we just joined, we might want to redirect if we're not already there.
-      // For now, we'll let the calling component handle the initial redirect if needed.
     }
 
     function onPlayerCount(data: { count: number }) {
@@ -67,13 +69,20 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
     function onSessionUpdate(data: any) {
       if (data.sessionState !== undefined) setSessionState(data.sessionState);
-      if (data.movies) setMoviesState(Object.values(data.movies)); // Redis stores as object?
+      if (data.movies) setMoviesState(Object.values(data.movies));
       if (data.results) setResultsState(data.results);
       if (data.currentMovies) setMoviesState(data.currentMovies);
+      if (data.gameMode) setGameMode(data.gameMode as GameMode);
 
-      // Automatic navigation logic could live here or in components.
-      // In a "dumb" architecture, components react to state. 
-      // e.g. WaitingPage sees sessionState became true -> router.push('/vote')
+      // Parse tournament state — expose only the client-facing fields
+      if (data.tournament) {
+        setTournamentState({
+          status: data.tournament.status,
+          roundIndex: data.tournament.roundIndex,
+          pairs: data.tournament.pairs ?? [],
+          rankings: data.tournament.rankings,
+        });
+      }
     }
 
     function onError(err: any) {
@@ -145,10 +154,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   };
 
   const startGame = () => {
-    // Implement API call or socket emit to start game
-    // Based on previous code, likely an API call to endpoint that updates redis + socket
-    // Re-checking verify how game was started: 
-    // It was previously in WaitingPage: `fetch("/api/start-game", ...)`
+    // Game is started via /api/start-game from CreatePage
   };
 
   const submitVotes = (votes: any) => {
@@ -165,6 +171,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         movies,
         results,
         sessionState,
+        gameMode,
+        tournamentState,
         joinSession,
         createSession,
         startGame,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../_ui/Header";
 import type { Screen } from "@/types/screen";
 import type { CustomMovie } from "@/types/movies";
@@ -37,22 +37,13 @@ interface TournamentVotingPageProps {
     status: TournamentStatus;
     /** Number of players in the room */
     playerCount: number;
+    /** Socket ID of the current user — used server-side to deduplicate votes */
+    voterSocketId: string;
     /** Called when tournament is complete to navigate away */
     onNavigate: (screen: Screen, code?: string) => void;
 }
 
 // ─── API call ───────────────────────────────────────────────────────
-// BACKEND DEV: Create POST /api/tournament/vote
-// - Accepts TournamentVoteRequest body
-// - Records this user's pick for the given pair in the current round
-// - When ALL users have voted on ALL pairs in the round:
-//     1. Tally votes per pair — movie with more "yes" picks wins
-//     2. Build next round pairs from winners (or final rankings)
-//     3. Publish updated TournamentState via session-update socket event
-//        with status "voting" (next round) or "complete" (tournament over)
-// - While some users are still voting, the users who finished get
-//   status "waiting" in their socket update so the UI shows the
-//   between-round waiting screen.
 
 async function submitTournamentVote(payload: TournamentVoteRequest): Promise<boolean> {
     try {
@@ -76,6 +67,7 @@ export default function TournamentVotingPage({
     roundIndex,
     status,
     playerCount,
+    voterSocketId,
     onNavigate,
 }: TournamentVotingPageProps) {
     const [pairIndex, setPairIndex] = useState(0);
@@ -101,6 +93,7 @@ export default function TournamentVotingPage({
             roundIndex,
             pairIndex,
             winnerImdbId: winner.imdb_id,
+            voterSocketId,
         });
 
         setIsSubmitting(false);
@@ -114,13 +107,15 @@ export default function TournamentVotingPage({
         setPairIndex((prev) => prev + 1);
     };
 
-    // ── When backend pushes a new round, reset local pair index ─────
-    // The route wrapper should re-render this component with new props
-    // when roundIndex changes. We reset pairIndex via key prop on the
-    // parent (see note below) OR with an effect:
-    //
-    // ROUTE WRAPPER NOTE: render <TournamentVotingPage key={roundIndex} .../>
-    // so React remounts and resets local state when a new round starts.
+    // ── Navigate to results when tournament is complete ─────────────
+    // Must be a useEffect — status can become "complete" while
+    // finishedCurrentRound is also true (waiting screen is showing),
+    // so checking in render order would miss it.
+    useEffect(() => {
+        if (status === "complete") {
+            onNavigate("results", roomCode);
+        }
+    }, [status, onNavigate, roomCode]);
 
     // ── Render: between-round waiting ───────────────────────────────
     if (status === "waiting" || finishedCurrentRound) {
@@ -131,13 +126,6 @@ export default function TournamentVotingPage({
                 playerCount={playerCount}
             />
         );
-    }
-
-    // ── Render: tournament complete → navigate to results ───────────
-    if (status === "complete") {
-        // Navigation is triggered; results page reads rankings from context
-        onNavigate("results", roomCode);
-        return null;
     }
 
     // ── Render: active voting ───────────────────────────────────────

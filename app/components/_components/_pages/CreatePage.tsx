@@ -72,10 +72,11 @@ export default function CreatePage({
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
 				sessionID: roomCode,
-				movies: movieData, // Send movies to be stored in Redis
-				hostGenres: selectedGenres, // Send host genres for merging with guests
+				movies: movieData,
+				hostGenres: selectedGenres,
 				hostYearRange: yearRange,
-				// TODO: Send selected game mode to be stored in Redis and used for game flow (e.g. number of rounds, etc.)
+				gameMode: selectedGameMode,
+				playerCount,
 			}),
 		});
 

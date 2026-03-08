@@ -1,50 +1,13 @@
 import { updateSessionData, getSessionData } from "@/redis/redis";
 import { redisData } from "@/types/redisData";
-import { CustomMovie, Result } from "@/types/movies";
+import { CustomMovie } from "@/types/movies";
+import { transformVote, compatibilityScore, calculateResults } from "@/lib/scoring";
 
 type requestBody = {
 	sessionID: string;
 	CustomMovie: CustomMovie;
 	score: string;
 };
-
-// Maps raw vote (2–5) to a 0–100 transformed value.
-// A vote of 1 is a veto and is handled separately — do not pass 1 here.
-function transformVote(raw: number): number {
-	const map: Record<number, number> = { 2: 25, 3: 50, 4: 75, 5: 100 };
-	return map[raw] ?? 50;
-}
-
-// Calculates the veto-penalised compatibility score (0–100) for a single movie entry.
-function compatibilityScore(score: number, count: number, vetoes: number): number {
-	const total = count + vetoes;
-	if (total === 0) return 0;
-	if (count === 0) return 0; // all votes were vetoes
-	const vetoFactor = Math.pow(count / total, 3.5);
-	return Math.round(Math.min(100, Math.max(0, score * vetoFactor)));
-}
-
-// Helper to calculate results from session data
-function calculateResults(sessionData: redisData): Result[] {
-	const results: Result[] = [];
-
-	for (const imdbId in sessionData.movies) {
-		const movieEntry = sessionData.movies[imdbId];
-		results.push({
-			movie: movieEntry.movieData,
-			compatibility: compatibilityScore(
-				movieEntry.score,
-				movieEntry.count,
-				movieEntry.vetoes ?? 0,
-			),
-		});
-	}
-
-	// Sort by compatibility score (highest first)
-	results.sort((a, b) => b.compatibility - a.compatibility);
-
-	return results;
-}
 
 export async function POST(req: Request) {
 	try {

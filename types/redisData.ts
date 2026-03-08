@@ -1,5 +1,6 @@
 import { CustomMovie } from "./movies"
 import { Result } from "./movies";
+import { TournamentPair, TournamentRanking } from "./tournament";
 
 // Type for data on individual movies stored in redis sessions. Data is stored in redis as a map where structure is as follows:
 // <K: movieID[string], V: score[number], count[number], vetoes[number]
@@ -13,14 +14,32 @@ export type redisMovieData = {
   vetoes?: number,
 }
 
+// Tournament data stored inside the session — the public-facing shape matches TournamentState.
+// Additional internal fields (playerCount, allMovies, eliminatedMovies) are used only by the backend.
+export type redisTournamentData = {
+  status: "voting" | "complete";
+  roundIndex: number;
+  /** Current round pairs — same for all players */
+  pairs: TournamentPair[];
+  /** Number of connected players at game start */
+  playerCount: number;
+  /** All 8 movies chosen for this tournament, kept to build next-round pairs */
+  allMovies: CustomMovie[];
+  /** Movies knocked out each round, with vote context for ranking within the group */
+  eliminatedMovies: Array<{ movie: CustomMovie; roundIndex: number; votesReceived: number }>;
+  /** Populated once status === "complete" */
+  rankings?: TournamentRanking[];
+};
 
 // structure of data stored in redis
 export type redisData = {
   createdAt: string;
   sessionState: boolean;
+  gameMode?: "classic" | "tournament";
   movies: Record<string, redisMovieData>;
   currentMovies?: CustomMovie[];
-  results?: Result[]; // Add this
+  results?: Result[];
+  tournament?: redisTournamentData;
 };
 
 

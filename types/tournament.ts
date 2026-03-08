@@ -40,17 +40,14 @@ export type TournamentRanking = {
 
 // ─── Request body: submit a single pair vote ────────────────────────
 // POST /api/tournament/vote
-// BACKEND DEV: Accept this payload. Look up the session's current
-// tournament round. Record which movie this user picked as the winner
-// for this pair. Once ALL users in the session have voted on ALL pairs
-// in the current round, resolve winners, build the next round's pairs,
-// and publish an updated TournamentState via session-update socket event.
 export type TournamentVoteRequest = {
   sessionID: string;
   roundIndex: number;
   pairIndex: number;
   /** imdb_id of the chosen movie */
   winnerImdbId: string;
+  /** Socket ID of the voter — used server-side to deduplicate votes */
+  voterSocketId: string;
 };
 
 // ─── Response body from vote endpoint ───────────────────────────────
