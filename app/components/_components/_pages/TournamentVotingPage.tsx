@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { socket } from "@/app/socket";
 import Header from "../_ui/Header";
 import type { Screen } from "@/types/screen";
 import type { CustomMovie } from "@/types/movies";
@@ -72,6 +74,7 @@ export default function TournamentVotingPage({
 }: TournamentVotingPageProps) {
     const [pairIndex, setPairIndex] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [selectedId, setSelectedId] = useState<string | null>(null);
 
     const roundLabel = getRoundLabel(roundIndex);
     const totalPairs = pairs.length;
@@ -84,26 +87,34 @@ export default function TournamentVotingPage({
 
     // ── Handle user pick ────────────────────────────────────────────
     const handlePick = async (winner: CustomMovie) => {
-        if (!leftMovie || !rightMovie || isSubmitting) return;
+        const liveSocketId = socket.id || voterSocketId;
+        if (!leftMovie || !rightMovie || isSubmitting || selectedId || !liveSocketId) return;
 
+        // 1. Show the winner/loser animation for ~700 ms
+        setSelectedId(winner.imdb_id);
         setIsSubmitting(true);
+
+        await new Promise((resolve) => setTimeout(resolve, 700));
 
         const success = await submitTournamentVote({
             sessionID: roomCode,
             roundIndex,
             pairIndex,
             winnerImdbId: winner.imdb_id,
-            voterSocketId,
+            voterSocketId: liveSocketId,
         });
-
-        setIsSubmitting(false);
 
         if (!success) {
             // TODO: Show toast / error feedback
+            setSelectedId(null);
+            setIsSubmitting(false);
             return;
         }
 
-        // Move to next pair (or finish round)
+        // 2. Brief pause so the exit animation plays, then advance
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        setSelectedId(null);
+        setIsSubmitting(false);
         setPairIndex((prev) => prev + 1);
     };
 
@@ -147,22 +158,35 @@ export default function TournamentVotingPage({
             </div>
 
             {/* 1v1 cards */}
-            <div className="grid grid-cols-2 gap-3 w-full items-stretch auto-rows-fr">
-                {leftMovie && rightMovie && (
-                    <>
-                        <TournamentMovieCard
-                            movie={leftMovie}
-                            onPick={() => handlePick(leftMovie)}
-                            disabled={isSubmitting}
-                        />
-                        <TournamentMovieCard
-                            movie={rightMovie}
-                            onPick={() => handlePick(rightMovie)}
-                            disabled={isSubmitting}
-                        />
-                    </>
-                )}
-            </div>
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={pairIndex}
+                    className="grid grid-cols-2 gap-3 w-full items-stretch auto-rows-fr"
+                    initial={{ opacity: 0, x: 60 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -60 }}
+                    transition={{ duration: 0.1, ease: "easeInOut" }}
+                >
+                    {leftMovie && rightMovie && (
+                        <>
+                            <TournamentMovieCard
+                                movie={leftMovie}
+                                onPick={() => handlePick(leftMovie)}
+                                disabled={isSubmitting}
+                                isSelected={selectedId === leftMovie.imdb_id}
+                                isEliminated={selectedId !== null && selectedId !== leftMovie.imdb_id}
+                            />
+                            <TournamentMovieCard
+                                movie={rightMovie}
+                                onPick={() => handlePick(rightMovie)}
+                                disabled={isSubmitting}
+                                isSelected={selectedId === rightMovie.imdb_id}
+                                isEliminated={selectedId !== null && selectedId !== rightMovie.imdb_id}
+                            />
+                        </>
+                    )}
+                </motion.div>
+            </AnimatePresence>
         </div>
     );
 }
