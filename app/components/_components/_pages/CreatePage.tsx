@@ -29,13 +29,13 @@ export default function CreatePage({
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
 	const [yearRange, setYearRange] = useState<[number, number]>([2000, new Date().getFullYear()]);
 	const [fetchEnabled, setFetchEnabled] = useState(false);
+	const [selectedGameMode, setSelectedGameMode] = useState<"classic" | "tournament">("classic");
 
 	const {
 		data: movies,
 		isPending,
 		refetch,
 	} = useMovies({ with_genres: selectedGenres, year_range: yearRange }, fetchEnabled);
-	// } = useMovies({ with_genres: selectedGenres, year_range: yearRange }, fetchEnabled); // TODO: Add year range to API call @Jepunen -R.M.
 
 	useEffect(() => {
 		// Host also listens for updates (in case of reconnection, etc.)
@@ -72,9 +72,11 @@ export default function CreatePage({
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
 				sessionID: roomCode,
-				movies: movieData, // Send movies to be stored in Redis
-				hostGenres: selectedGenres, // Send host genres for merging with guests
+				movies: movieData,
+				hostGenres: selectedGenres,
 				hostYearRange: yearRange,
+				gameMode: selectedGameMode,
+				playerCount,
 			}),
 		});
 
@@ -96,9 +98,10 @@ export default function CreatePage({
 			</div>
 
 			<div className="flex-1 flex items-center justify-center w-full px-2">
-				{selected !== "preferences" && <StatusImage status="hosting" />}
+				{selected == "create" && <StatusImage status="hosting" />}
 			</div>
 
+			{/* Preferences selection */}
 			{selected === "preferences" && (
 				<div className="flex flex-col items-center gap-2 w-full">
 
@@ -120,6 +123,78 @@ export default function CreatePage({
 				</div>
 			)}
 
+
+			{/* Game mode selection */}
+			{selected === "gamemode" && (
+				<div className="flex flex-col items-center gap-2 w-full">
+					<h3 className="text-xl font-semibold text-foreground">
+						Select Game Mode
+					</h3>
+
+					<div className="w-full max-w-screen-sm px-1 space-y-3">
+						<button
+							type="button"
+							onClick={() => setSelectedGameMode("classic")}
+							aria-pressed={selectedGameMode === "classic"}
+							className={`w-full rounded-lg border-2 p-4 transition-colors text-left ${selectedGameMode === "classic"
+								? "border-primary bg-primary/20 ring-2 ring-primary/50"
+								: "border-border bg-muted/40 hover:bg-muted/70"
+								}`}
+						>
+							<div className="flex items-center gap-3">
+								<div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-2xl ${selectedGameMode === "classic" ? "bg-primary/25" : "bg-muted"}`}>
+									🎬
+								</div>
+								<div className="min-w-0 flex-1">
+									<p className="text-base font-semibold text-heading">Classic</p>
+									<p className="text-sm text-body">Vote on 10 movies and get the final result immediately!</p>
+								</div>
+								<div className="flex items-center gap-2">
+									<div
+										className={`h-6 w-6 rounded-full border-2 flex items-center justify-center ${selectedGameMode === "classic"
+											? "border-primary bg-primary"
+											: "border-muted-foreground/60 bg-transparent"
+											}`}
+									>
+										<div className={`h-2.5 w-2.5 rounded-full ${selectedGameMode === "classic" ? "bg-primary-foreground" : "bg-transparent"}`} />
+									</div>
+								</div>
+							</div>
+						</button>
+
+						<button
+							type="button"
+							onClick={() => setSelectedGameMode("tournament")}
+							aria-pressed={selectedGameMode === "tournament"}
+							className={`w-full rounded-lg border-2 p-4 transition-colors text-left ${selectedGameMode === "tournament"
+								? "border-accent bg-accent/20 ring-2 ring-accent/50"
+								: "border-border bg-muted/40 hover:bg-muted/70"
+								}`}
+						>
+							<div className="flex items-center gap-3">
+								<div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-2xl ${selectedGameMode === "tournament" ? "bg-accent/25" : "bg-muted"}`}>
+									🏆
+								</div>
+								<div className="min-w-0 flex-1">
+									<p className="text-base font-semibold text-heading">Tournament</p>
+									<p className="text-sm text-body">Bracket-style rounds to find the ultimate movie for your group.</p>
+								</div>
+								<div className="flex items-center gap-2">
+									<div
+										className={`h-6 w-6 rounded-full border-2 flex items-center justify-center ${selectedGameMode === "tournament"
+											? "border-accent bg-accent"
+											: "border-muted-foreground/60 bg-transparent"
+											}`}
+									>
+										<div className={`h-2.5 w-2.5 rounded-full ${selectedGameMode === "tournament" ? "bg-accent-foreground" : "bg-transparent"}`} />
+									</div>
+								</div>
+							</div>
+						</button>
+					</div>
+				</div>
+			)}
+
 			<div className="flex flex-col items-center gap-2 w-full">
 				<h2 className="text-4xl font-black text-center text-gradient">
 					Room Code
@@ -137,6 +212,7 @@ export default function CreatePage({
 					options={[
 						{ label: "Create", value: "create" },
 						{ label: "Preferences", value: "preferences" },
+						{ label: "Game Mode", value: "gamemode" },
 					]}
 					value={selected}
 					onChange={setSelected}

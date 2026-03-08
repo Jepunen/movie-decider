@@ -1,19 +1,24 @@
 import { getSessionData, updateSessionData } from "@/redis/redis";
 import { CustomMovie } from "@/types/movies";
+import { redisTournamentData } from "@/types/redisData";
 import Redis from "ioredis";
 import { getMovies } from "@/lib/movies";
+import { pickTournamentMovies, buildPairs } from "@/lib/tournament";
+import { mergeGenres, mergeYearRanges, buildMovieParams } from "@/lib/filter";
 
 type RequestBody = {
     sessionID: string;
     movies: CustomMovie[];
     hostGenres: number[];
     hostYearRange?: [number, number];
+    gameMode?: "classic" | "tournament";
+    playerCount?: number;
 };
 
 export async function POST(request: Request) {
     try {
         const body: RequestBody = await request.json();
-        const { sessionID, movies, hostGenres, hostYearRange } = body;
+        const { sessionID, movies, hostGenres, hostYearRange, gameMode = "classic", playerCount = 1 } = body;
 
         if (!sessionID) {
             return Response.json({ message: "sessionID is required" }, { status: 400 });
@@ -40,46 +45,60 @@ export async function POST(request: Request) {
 
         await redis.disconnect();
 
-        const guestGenres = guestGenreValues.flatMap((v) => (v ? (JSON.parse(v) as number[]) : []));
-        const mergedGenres = [...new Set([...hostGenres, ...guestGenres])];
+        const guestGenreSets = guestGenreValues.flatMap((v) =>
+            v ? [JSON.parse(v) as number[]] : [],
+        );
+        const mergedGenres = mergeGenres(hostGenres, guestGenreSets);
 
         const allYearRanges: [number, number][] = [
             ...(hostYearRange ? [hostYearRange] : []),
             ...guestYearRangeValues.flatMap((v) => (v ? [JSON.parse(v) as [number, number]] : [])),
         ];
-
-        const mergedYearRange: [number, number] | undefined =
-            allYearRanges.length > 0
-                ? [Math.min(...allYearRanges.map(([start]) => start)), Math.max(...allYearRanges.map(([, end]) => end))]
-                : undefined;
-
-        // Build params object combining both genres and year range
-        const movieParams: Record<string, string> = {};
-
-        if (mergedGenres.length > 0) {
-            movieParams.with_genres = mergedGenres.join("|");
-        }
-        if (mergedYearRange) {
-            movieParams["primary_release_date.gte"] = `${mergedYearRange[0]}-01-01`;
-            movieParams["primary_release_date.lte"] = `${mergedYearRange[1]}-12-31`;
-        }
+        const mergedYearRange = mergeYearRanges(allYearRanges);
+        const movieParams = buildMovieParams(mergedGenres, mergedYearRange);
 
         let finalMovies = movies;
         if (Object.keys(movieParams).length > 0) {
             finalMovies = await getMovies(movieParams);
         }
 
-        // Update session with new state and movies
+        // ── Tournament setup ──────────────────────────────────────────────
+        if (gameMode === "tournament") {
+            const tournamentMovies = pickTournamentMovies(finalMovies);
+
+            if (tournamentMovies.length < 2) {
+                return Response.json({ message: "Not enough movies for a tournament" }, { status: 400 });
+            }
+
+            const pairs = buildPairs(tournamentMovies);
+
+            const tournamentData: redisTournamentData = {
+                status: "voting",
+                roundIndex: 0,
+                pairs,
+                playerCount,
+                allMovies: tournamentMovies,
+                eliminatedMovies: [],
+            };
+
+            sessionData.sessionState = true;
+            sessionData.gameMode = "tournament";
+            sessionData.currentMovies = tournamentMovies;
+            sessionData.tournament = tournamentData;
+
+            await updateSessionData(sessionID, sessionData);
+
+            return Response.json({ message: "Tournament started successfully" }, { status: 200 });
+        }
+
+        // ── Classic mode ──────────────────────────────────────────────────
         sessionData.sessionState = true;
+        sessionData.gameMode = "classic";
         sessionData.currentMovies = finalMovies;
 
-        // This will update Redis AND publish to all subscribers
         await updateSessionData(sessionID, sessionData);
 
-		console.log("🔑 Guest yearRange keys:", guestYearRangeKeys);
-		console.log("📦 Guest yearRange values:", guestYearRangeValues);
-		console.log("🎯 Merged yearRange:", mergedYearRange);
-		console.log("🎬 Movie params:", movieParams);
+        console.log("🎬 Movie params:", movieParams);
 
         return Response.json({ message: "Game started successfully" }, { status: 200 });
     } catch (error) {
